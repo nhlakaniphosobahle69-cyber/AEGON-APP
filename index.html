@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEGON V3 - Content Pillars</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;min-height:100vh}
+header{background:#111;border-bottom:2px solid #00e5ff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}
+header h1{color:#00e5ff;font-size:18px;letter-spacing:2px}
+header p{color:#888;font-size:12px;margin-top:4px}
+.badge{display:inline-block;background:#ffea00;color:#000;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-top:8px}
+.tabs{display:flex;gap:6px;padding:12px;background:#111;overflow-x:auto;position:sticky;top:72px;z-index:9}
+.tab{white-space:nowrap;padding:8px 14px;border:1px solid #333;border-radius:20px;background:#1a1a1a;color:#888;font-size:12px;cursor:pointer}
+.tab.active{background:#00e5ff;color:#000;border-color:#00e5ff;font-weight:700}
+.content{padding:16px;max-width:900px;margin:0 auto}
+.card{background:#151515;border:1px solid #222;border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{color:#00e5ff;font-size:14px;margin-bottom:6px}
+.card p{color:#aaa;font-size:13px;line-height:1.5}
+.chat-box{background:#111;border:1px solid #222;border-radius:12px;padding:12px;height:380px;overflow-y:auto;margin-bottom:12px}
+.msg{margin:8px 0;padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.4}
+.user{background:#00e5ff;color:#000;margin-left:20%;text-align:right}
+.bot{background:#1e1e1e;color:#e0e0e0;border:1px solid #333}
+.input-row{display:flex;gap:8px}
+.input-row input{flex:1;background:#1a1a1a;border:1px solid #333;color:#fff;padding:12px;border-radius:10px;font-size:14px}
+.input-row button{background:#00e5ff;color:#000;border:none;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer}
+.pill{display:inline-block;background:#222;border:1px solid #333;color:#aaa;padding:4px 10px;border-radius:14px;font-size:11px;margin:4px}
+</style>
+</head>
+<body>
+<header>
+<h1>AEGON V3 - CONTENT PILLARS</h1>
+<p>Security Intelligence OS | 12 Pillars Live</p>
+<div class="badge">12 PILLARS LIVE</div>
+</header>
+<div class="tabs" id="tabs"></div>
+<div class="content" id="main"></div>
+<script>
+const pillars={"CHAT":{type:"chat"},"4 ALERT":[{title:"1. Signal vs Noise",desc:"Distinguish real threats from false alarms. AI filtering reduces 90% noise."},{title:"2. Real-Time Delivery",desc:"Instant push alerts in <2 seconds. No delay."},{title:"3. Visual Verification",desc:"Live snapshot + video clip with every alert."},{title:"4. Geofencing",desc:"Custom zones, entry/exit alerts. Protect perimeters."}],"INFRA":[{title:"5. Zero Hardware",desc:"100% cloud, no DVR, no server on site."},{title:"6. Performance",desc:"Sub-2s latency, 99.9% uptime."},{title:"7. Security",desc:"End-to-end encryption, POPIA compliant."},{title:"8. Actionable",desc:"Not just alert, action: siren, call, lock."}],"DEV":[{title:"9. RTSP Engine",desc:"Ingests any RTSP/ONVIF camera."},{title:"10. Video Pipeline",desc:"Decoding, AI inference, encoding optimized."},{title:"11. Hardware Edge",desc:"Optional edge box for offline sites."},{title:"12. Vision Training",desc:"Custom model training for your site."}],"KB":[{title:"What is Geofencing?",desc:"Geofencing = virtual fence. Draw zone, if person enters, alert. Zulu: Ucingo olubonakalayo."},{title:"RTSP Explained",desc:"RTSP is camera streaming protocol. AEGON connects to any camera."},{title:"Zero Hardware?",desc:"No need to buy NVR. Use cameras + cloud. Save R50k+."}],"OWNER":[{title:"Owner Mode",desc:"Add new pillars here. OS grows with your knowledge."}]};
+const tabNames=Object.keys(pillars);let active="CHAT";
+function renderTabs(){document.getElementById("tabs").innerHTML=tabNames.map(t=>`<div class="tab ${t===active?'active':''}" onclick="switchTab('${t}')">${t}</div>`).join("");}
+function switchTab(t){active=t;renderTabs();renderMain();}
+function renderMain(){const main=document.getElementById("main");const data=pillars[active];if(active==="CHAT"){main.innerHTML=`<div class="card"><h3>Chat with AEGON V3</h3><p>Ask about any pillar. English + Zulu</p><div style="margin-top:10px"><span class="pill" onclick="ask('What is Geofencing?')">What is Geofencing?</span><span class="pill" onclick="ask('Show all 12 pillars')">Show all 12 pillars</span><span class="pill" onclick="ask('Explain RTSP')">Explain RTSP</span><span class="pill" onclick="ask('Zero Hardware?')">Zero Hardware?</span></div></div><div class="chat-box" id="chat"><div class="msg bot">Sawubona! I am AEGON V3. I know all 12 pillars. Ask me anything.</div></div><div class="input-row"><input id="q" placeholder="Type question..." onkeydown="if(event.key==='Enter')send()"><button onclick="send()">SEND</button></div>`;return;}main.innerHTML=data.map(p=>`<div class="card"><h3>${p.title}</h3><p>${p.desc}</p></div>`).join("");}
+function ask(t){document.getElementById("q").value=t;send();}
+function send(){const input=document.getElementById("q");const q=input.value.trim();if(!q)return;const chat=document.getElementById("chat");chat.innerHTML+=`<div class="msg user">${q}</div>`;let ans="I have info on all 12 pillars. ";const l=q.toLowerCase();if(l.includes("geofenc"))ans="Geofencing = Virtual fence. Draw zone, alert when person enters. Zulu: Ucingo olubonakalayo - dweba indawo, uma umuntu engena, thola isexwayiso. Pillar 4.";else if(l.includes("rtsp"))ans="RTSP = Camera streaming protocol. AEGON reads any RTSP camera - Hikvision, Dahua, etc. Pillar 9.";else if(l.includes("zero")||l.includes("hardware"))ans="Zero Hardware = No NVR/server at site. Only cameras + internet + cloud. Saves R50k+. Zulu: Akukho hardware edingekayo. Pillar 5.";else if(l.includes("12")||l.includes("all"))ans="All 12: 1 Signal vs Noise, 2 Real-Time Delivery, 3 Visual Verification, 4 Geofencing, 5 Zero Hardware, 6 Performance, 7 Security, 8 Actionable, 9 RTSP Engine, 10 Video Pipeline, 11 Hardware Edge, 12 Vision Training.";else ans="Ask: 'What is Geofencing?' 'Explain RTSP' 'Zero Hardware?' 'Show all 12 pillars'";chat.innerHTML+=`<div class="msg bot">${ans}</div>`;input.value="";chat.scrollTop=chat.scrollHeight;}
+renderTabs();renderMain();
+</script>
+</body>
+</html>
