@@ -1,50 +1,665 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AEGON V3 - Content Pillars</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;min-height:100vh}
-header{background:#111;border-bottom:2px solid #00e5ff;padding:16px;text-align:center;position:sticky;top:0;z-index:10}
-header h1{color:#00e5ff;font-size:18px;letter-spacing:2px}
-header p{color:#888;font-size:12px;margin-top:4px}
-.badge{display:inline-block;background:#ffea00;color:#000;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-top:8px}
-.tabs{display:flex;gap:6px;padding:12px;background:#111;overflow-x:auto;position:sticky;top:72px;z-index:9}
-.tab{white-space:nowrap;padding:8px 14px;border:1px solid #333;border-radius:20px;background:#1a1a1a;color:#888;font-size:12px;cursor:pointer}
-.tab.active{background:#00e5ff;color:#000;border-color:#00e5ff;font-weight:700}
-.content{padding:16px;max-width:900px;margin:0 auto}
-.card{background:#151515;border:1px solid #222;border-radius:12px;padding:16px;margin-bottom:12px}
-.card h3{color:#00e5ff;font-size:14px;margin-bottom:6px}
-.card p{color:#aaa;font-size:13px;line-height:1.5}
-.chat-box{background:#111;border:1px solid #222;border-radius:12px;padding:12px;height:380px;overflow-y:auto;margin-bottom:12px}
-.msg{margin:8px 0;padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.4}
-.user{background:#00e5ff;color:#000;margin-left:20%;text-align:right}
-.bot{background:#1e1e1e;color:#e0e0e0;border:1px solid #333}
-.input-row{display:flex;gap:8px}
-.input-row input{flex:1;background:#1a1a1a;border:1px solid #333;color:#fff;padding:12px;border-radius:10px;font-size:14px}
-.input-row button{background:#00e5ff;color:#000;border:none;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer}
-.pill{display:inline-block;background:#222;border:1px solid #333;color:#aaa;padding:4px 10px;border-radius:14px;font-size:11px;margin:4px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AEGON V3 - Content Pillars</title>
+  <style>
+    :root {
+      --bg: #070b12;
+      --bg-2: #0d1520;
+      --panel: rgba(18, 25, 34, 0.9);
+      --panel-strong: #121c26;
+      --panel-soft: #1a2633;
+      --line: rgba(148, 166, 184, 0.2);
+      --text: #ebf1f7;
+      --muted: #9aa9b8;
+      --cyan: #00e5ff;
+      --cyan-2: #3ddcff;
+      --yellow: #ffe65c;
+      --green: #7ef0b1;
+      --red: #ff6d7b;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(0, 229, 255, 0.12), transparent 30%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(10, 17, 24, 0.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.28);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 20px 16px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 4px 10px;
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      background: rgba(0, 229, 255, 0.08);
+      color: var(--cyan-2);
+      border-radius: 999px;
+      letter-spacing: 1.4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 12px;
+      background: linear-gradient(135deg, var(--yellow), #ffd233);
+      color: #1b1a12;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 20px rgba(255, 230, 92, 0.2);
+    }
+
+    .tabs {
+      position: sticky;
+      top: 94px;
+      z-index: 15;
+      background: rgba(11, 16, 22, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(148, 166, 184, 0.12);
+    }
+
+    .tabs-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      cursor: pointer;
+      border: 1px solid rgba(148, 166, 184, 0.2);
+      background: rgba(26, 37, 45, 0.9);
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 9px 14px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .tab:hover {
+      border-color: rgba(0, 229, 255, 0.45);
+      color: var(--text);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
+      color: #02151b;
+      border-color: transparent;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(0, 229, 255, 0.25);
+    }
+
+    .content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 20px 50px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(18, 28, 38, 0.94), rgba(13, 20, 27, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      color: var(--cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.01);
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.5rem;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .pillar-card {
+      background: rgba(21, 30, 38, 0.86);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 229, 255, 0.4);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+    }
+
+    .pillar-card h4 {
+      margin: 0 0 8px;
+      color: var(--cyan);
+      font-size: 0.96rem;
+    }
+
+    .pillar-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 166, 184, 0.18);
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chat-wrapper {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .chat-box {
+      height: 420px;
+      overflow-y: auto;
+      background: rgba(12, 17, 24, 0.8);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+    }
+
+    .msg {
+      max-width: 80%;
+      margin: 8px 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .msg.user {
+      margin-left: auto;
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
+      color: #03161d;
+      border-bottom-right-radius: 4px;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .msg.bot {
+      margin-right: auto;
+      background: rgba(33, 42, 50, 0.9);
+      color: var(--text);
+      border: 1px solid rgba(148, 166, 184, 0.18);
+      border-bottom-left-radius: 4px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .input-row input {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 166, 184, 0.2);
+      background: rgba(18, 28, 38, 0.9);
+      color: var(--text);
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .input-row input:focus {
+      border-color: rgba(0, 229, 255, 0.55);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12);
+    }
+
+    .input-row button {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
+      color: #02151b;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .input-row button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .quick {
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      background: rgba(0, 229, 255, 0.06);
+      color: var(--cyan-2);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quick:hover {
+      background: rgba(0, 229, 255, 0.12);
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tabs-inner {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+
+      .msg {
+        max-width: 92%;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .input-row button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-<h1>AEGON V3 - CONTENT PILLARS</h1>
-<p>Security Intelligence OS | 12 Pillars Live</p>
-<div class="badge">12 PILLARS LIVE</div>
-</header>
-<div class="tabs" id="tabs"></div>
-<div class="content" id="main"></div>
-<script>
-const pillars={"CHAT":{type:"chat"},"4 ALERT":[{title:"1. Signal vs Noise",desc:"Distinguish real threats from false alarms. AI filtering reduces 90% noise."},{title:"2. Real-Time Delivery",desc:"Instant push alerts in <2 seconds. No delay."},{title:"3. Visual Verification",desc:"Live snapshot + video clip with every alert."},{title:"4. Geofencing",desc:"Custom zones, entry/exit alerts. Protect perimeters."}],"INFRA":[{title:"5. Zero Hardware",desc:"100% cloud, no DVR, no server on site."},{title:"6. Performance",desc:"Sub-2s latency, 99.9% uptime."},{title:"7. Security",desc:"End-to-end encryption, POPIA compliant."},{title:"8. Actionable",desc:"Not just alert, action: siren, call, lock."}],"DEV":[{title:"9. RTSP Engine",desc:"Ingests any RTSP/ONVIF camera."},{title:"10. Video Pipeline",desc:"Decoding, AI inference, encoding optimized."},{title:"11. Hardware Edge",desc:"Optional edge box for offline sites."},{title:"12. Vision Training",desc:"Custom model training for your site."}],"KB":[{title:"What is Geofencing?",desc:"Geofencing = virtual fence. Draw zone, if person enters, alert. Zulu: Ucingo olubonakalayo."},{title:"RTSP Explained",desc:"RTSP is camera streaming protocol. AEGON connects to any camera."},{title:"Zero Hardware?",desc:"No need to buy NVR. Use cameras + cloud. Save R50k+."}],"OWNER":[{title:"Owner Mode",desc:"Add new pillars here. OS grows with your knowledge."}]};
-const tabNames=Object.keys(pillars);let active="CHAT";
-function renderTabs(){document.getElementById("tabs").innerHTML=tabNames.map(t=>`<div class="tab ${t===active?'active':''}" onclick="switchTab('${t}')">${t}</div>`).join("");}
-function switchTab(t){active=t;renderTabs();renderMain();}
-function renderMain(){const main=document.getElementById("main");const data=pillars[active];if(active==="CHAT"){main.innerHTML=`<div class="card"><h3>Chat with AEGON V3</h3><p>Ask about any pillar. English + Zulu</p><div style="margin-top:10px"><span class="pill" onclick="ask('What is Geofencing?')">What is Geofencing?</span><span class="pill" onclick="ask('Show all 12 pillars')">Show all 12 pillars</span><span class="pill" onclick="ask('Explain RTSP')">Explain RTSP</span><span class="pill" onclick="ask('Zero Hardware?')">Zero Hardware?</span></div></div><div class="chat-box" id="chat"><div class="msg bot">Sawubona! I am AEGON V3. I know all 12 pillars. Ask me anything.</div></div><div class="input-row"><input id="q" placeholder="Type question..." onkeydown="if(event.key==='Enter')send()"><button onclick="send()">SEND</button></div>`;return;}main.innerHTML=data.map(p=>`<div class="card"><h3>${p.title}</h3><p>${p.desc}</p></div>`).join("");}
-function ask(t){document.getElementById("q").value=t;send();}
-function send(){const input=document.getElementById("q");const q=input.value.trim();if(!q)return;const chat=document.getElementById("chat");chat.innerHTML+=`<div class="msg user">${q}</div>`;let ans="I have info on all 12 pillars. ";const l=q.toLowerCase();if(l.includes("geofenc"))ans="Geofencing = Virtual fence. Draw zone, alert when person enters. Zulu: Ucingo olubonakalayo - dweba indawo, uma umuntu engena, thola isexwayiso. Pillar 4.";else if(l.includes("rtsp"))ans="RTSP = Camera streaming protocol. AEGON reads any RTSP camera - Hikvision, Dahua, etc. Pillar 9.";else if(l.includes("zero")||l.includes("hardware"))ans="Zero Hardware = No NVR/server at site. Only cameras + internet + cloud. Saves R50k+. Zulu: Akukho hardware edingekayo. Pillar 5.";else if(l.includes("12")||l.includes("all"))ans="All 12: 1 Signal vs Noise, 2 Real-Time Delivery, 3 Visual Verification, 4 Geofencing, 5 Zero Hardware, 6 Performance, 7 Security, 8 Actionable, 9 RTSP Engine, 10 Video Pipeline, 11 Hardware Edge, 12 Vision Training.";else ans="Ask: 'What is Geofencing?' 'Explain RTSP' 'Zero Hardware?' 'Show all 12 pillars'";chat.innerHTML+=`<div class="msg bot">${ans}</div>`;input.value="";chat.scrollTop=chat.scrollHeight;}
-renderTabs();renderMain();
-</script>
+  <header>
+    <div class="header-inner">
+      <div class="eyebrow">Security Intelligence OS</div>
+      <h1>AEGON V3</h1>
+      <p class="subtitle">Content Pillars | 12 Live Signals</p>
+      <div class="badge">12 Pillars Live</div>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="AEGON navigation">
+    <div class="tabs-inner" id="tabs"></div>
+  </nav>
+
+  <main class="content" id="main"></main>
+
+  <script>
+    const pillars = {
+      CHAT: { type: "chat" },
+      "1 SIGNAL": {
+        type: "pillars",
+        items: [
+          { title: "Signal vs Noise", desc: "Clean the signal by separating real threats from simulations, noise, and weak alerts." },
+          { title: "Context Layer", desc: "Map entities, activity, and patterns into a decision-ready operating picture." },
+          { title: "Adversary Lens", desc: "Assess risk through the mindset of actors, motives, and attack paths." }
+        ],
+        tags: ["Threat Detection", "Filtering", "Confidence"]
+      },
+      "2 REAL-TIME": {
+        type: "pillars",
+        items: [
+          { title: "Live Delivery", desc: "Push critical insights to teams in seconds, not after the window has already closed." },
+          { title: "Unified Events", desc: "Correlate fragmented telemetry into one coherent operational story." },
+          { title: "Time-to-Action", desc: "Reduce response latency and compress decision windows under operational pressure." }
+        ],
+        tags: ["Speed", "Ops", "Response"]
+      },
+      "3 RISK": {
+        type: "pillars",
+        items: [
+          { title: "Risk Prioritization", desc: "Focus resources on events with the highest impact, urgency, and confidence." },
+          { title: "Business Impact", desc: "Translate technical signals into operational and business risk language." },
+          { title: "Exposure Mapping", desc: "Measure where vulnerability, activity, and sensitivity intersect." }
+        ],
+        tags: ["Priority", "Coverage", "Exposure"]
+      },
+      "4 ALERT": {
+        type: "pillars",
+        items: [
+          { title: "Alert Quality", desc: "Eliminate low-value alert churn with sharper logic and stronger enrichment." },
+          { title: "False Positive Control", desc: "Suppress noise while preserving high-confidence indicators for action." },
+          { title: "Escalation Rules", desc: "Route only the most actionable alerts to the right responders and channels." }
+        ],
+        tags: ["Automation", "Triage", "Routing"]
+      },
+      "5 INTELLIGENCE": {
+        type: "pillars",
+        items: [
+          { title: "Threat Intel", desc: "Blend indicators, intent, and emerging patterns into a usable intelligence layer." },
+          { title: "Pattern Recognition", desc: "Identify recurring behaviors across campaigns, infrastructure, and actors." },
+          { title: "Situational Awareness", desc: "Keep teams aligned around nearby threats, movement, and blast radius." }
+        ],
+        tags: ["Intel", "Patterns", "Awareness"]
+      },
+      "6 FORENSICS": {
+        type: "pillars",
+        items: [
+          { title: "Root Cause Review", desc: "Diagnose the chain of events behind suspicious activity and operational disruption." },
+          { title: "Evidence Timeline", desc: "Recreate the sequence of activity into a reviewable, explainable timeline." },
+          { title: "Decision Audit", desc: "Support investigations with traceable actions, assumptions, and outcomes." }
+        ],
+        tags: ["Investigation", "Audit", "Timeline"]
+      },
+      "7 ORCHESTRATION": {
+        type: "pillars",
+        items: [
+          { title: "Workflow Coordination", desc: "Connect intelligence, actions, and human decision-making in one system." },
+          { title: "Playbooks", desc: "Standardize response paths for recurring categories of risk and incidents." },
+          { title: "Cross-Team Sync", desc: "Keep security, operations, and leadership aligned with shared context." }
+        ],
+        tags: ["Playbooks", "Response", "Ops"]
+      },
+      "8 RESILIENCE": {
+        type: "pillars",
+        items: [
+          { title: "Recovery Readiness", desc: "Prepare for disruption with resilient workflows and clear action paths." },
+          { title: "Continuity Signals", desc: "Track operational health, dependencies, and emerging failure modes." },
+          { title: "Degradation Alerts", desc: "Spot when risk is shifting before it becomes a full service outage." }
+        ],
+        tags: ["Recovery", "Continuity", "Health"]
+      },
+      "9 GOVERNANCE": {
+        type: "pillars",
+        items: [
+          { title: "Policy Alignment", desc: "Ensure actions and signals align to governance, control expectations, and risk appetite." },
+          { title: "Compliance Signals", desc: "Convert regulatory requirements into operational checks and measurable controls." },
+          { title: "Accountability", desc: "Maintain accountability across approvals, actions, and outcomes." }
+        ],
+        tags: ["Governance", "Policy", "Compliance"]
+      },
+      "10 REPORTING": {
+        type: "pillars",
+        items: [
+          { title: "Executive Reporting", desc: "Turn operational detail into concise leadership-ready insight." },
+          { title: "Analyst Briefs", desc: "Surface lessons, trends, and risk narratives in a precise, actionable format." },
+          { title: "Performance View", desc: "Measure system effectiveness, signal quality, and response maturity over time." }
+        ],
+        tags: ["Narrative", "Metrics", "Briefs"]
+      },
+      "11 AI": {
+        type: "pillars",
+        items: [
+          { title: "Assistive Intelligence", desc: "Use AI to summarize, prioritize, and contextualize security workflows." },
+          { title: "Human-in-the-Loop", desc: "Keep operators in control by validating model recommendations before decisive action." },
+          { title: "Adaptive Learning", desc: "Continuously improve with feedback from analysts, events, and outcomes." }
+        ],
+        tags: ["AI", "Assist", "Learning"]
+      },
+      "12 COMMAND": {
+        type: "pillars",
+        items: [
+          { title: "Command View", desc: "Provide a central lens for awareness, direction, and operational control." },
+          { title: "Decision Support", desc: "Give leaders a clear view of priorities, dependencies, and consequences." },
+          { title: "Operational Confidence", desc: "Stabilize command decisions through visibility, structure, and shared context." }
+        ],
+        tags: ["Command", "Decision", "Control"]
+      }
+    };
+
+    const tabNames = Object.keys(pillars);
+    let active = "CHAT";
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = tabNames.map((tab) => `
+        <div class="tab ${tab === active ? "active" : ""}" onclick="switchTab('${tab}')">${tab}</div>
+      `).join("");
+    }
+
+    function switchTab(tab) {
+      active = tab;
+      renderTabs();
+      renderMain();
+    }
+
+    function renderMain() {
+      const main = document.getElementById("main");
+      const data = pillars[active];
+
+      if (!data) return;
+
+      if (active === "CHAT") {
+        main.innerHTML = `
+          <section class="hero">
+            <div class="card">
+              <h3>Chat with AEGON V3</h3>
+              <p>Ask about any pillar, signal, workflow, or risk posture. This assistant is designed to explain AEGON’s content architecture in clear operational terms.</p>
+              <div class="stats">
+                <div class="stat">
+                  <strong>12</strong>
+                  <span>Pillars</span>
+                </div>
+                <div class="stat">
+                  <strong>360°</strong>
+                  <span>Context</span>
+                </div>
+                <div class="stat">
+                  <strong>Real</strong>
+                  <span>Time</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Example prompts</h3>
+              <div class="quick-actions">
+                <div class="quick" onclick="ask('What is signal vs noise?')">Signal vs noise</div>
+                <div class="quick" onclick="ask('How does AEGON reduce alert fatigue?')">Alert fatigue</div>
+                <div class="quick" onclick="ask('What is risk prioritization?')">Risk prioritization</div>
+                <div class="quick" onclick="ask('How does real-time delivery work?')">Real-time delivery</div>
+              </div>
+            </div>
+          </section>
+          <section class="chat-wrapper">
+            <div class="chat-box" id="chat">
+              <div class="msg bot">Welcome to AEGON V3. I can explain the operating model, the pillars, and how the intelligence workflow helps teams act with more clarity.</div>
+            </div>
+            <div class="input-row">
+              <input id="q" type="text" placeholder="Ask AEGON V3..." aria-label="Ask AEGON V3" />
+              <button onclick="send()">Send</button>
+            </div>
+          </section>
+        `;
+        return;
+      }
+
+      main.innerHTML = `
+        <section class="card">
+          <h3>${active}</h3>
+          <p>${data.tags ? data.tags.map(tag => `<span class="pill">${tag}</span>`).join(" ") : ""}</p>
+        </section>
+        <section class="board">
+          ${data.items.map(item => `
+            <article class="pillar-card">
+              <h4>${item.title}</h4>
+              <p>${item.desc}</p>
+            </article>
+          `).join("")}
+        </section>
+      `;
+    }
+
+    function ask(prompt) {
+      const input = document.getElementById("q");
+      if (input) {
+        input.value = prompt;
+        send();
+      }
+    }
+
+    function send() {
+      const input = document.getElementById("q");
+      const chat = document.getElementById("chat");
+      if (!input || !chat) return;
+
+      const q = input.value.trim();
+      if (!q) return;
+
+      chat.innerHTML += `<div class="msg user">${escapeHtml(q)}</div>`;
+
+      const lower = q.toLowerCase();
+      let answer = "AEGON keeps security intelligence grounded in context, prioritization, and action. Ask about signal quality, alert fatigue, governance, or operational response and I’ll explain it clearly.";
+
+      if (lower.includes("signal") || lower.includes("noise")) {
+        answer = "Signal versus noise means separating real threats from weak alerts, duplicate events, and irrelevant activity. AEGON filters low-confidence noise so teams can focus on credible operational risk.";
+      } else if (lower.includes("alert") || lower.includes("fatigue")) {
+        answer = "AEGON reduces alert fatigue by enriching events, scoring importance, and routing only the most actionable alerts to the right operators. The goal is higher quality alerts, lower noise, and faster decisions.";
+      } else if (lower.includes("risk") || lower.includes("priorit")) {
+        answer = "Risk prioritization ranks issues by impact, urgency, confidence, and business relevance. That allows teams to decide what needs immediate action versus what can be monitored or deferred.";
+      } else if (lower.includes("real") || lower.includes("time")) {
+        answer = "Real-time delivery means operators receive relevant intelligence as situations unfold, not after the fact. This shortens reaction windows and improves decision-making under pressure.";
+      } else if (lower.includes("governance") || lower.includes("policy")) {
+        answer = "Governance ensures the security function stays aligned with internal controls, policy expectations, and risk appetite. AEGON converts those requirements into operational signals and accountability.";
+      } else if (lower.includes("ai") || lower.includes("intelligence")) {
+        answer = "AI supports analysts by summarizing large data sets, surfacing patterns, and accelerating triage. Human review remains essential to keep decisions accountable and context-aware.";
+      }
+
+      chat.innerHTML += `<div class="msg bot">${answer}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+      input.value = "";
+    }
+
+    renderTabs();
+    renderMain();
+  </script>
 </body>
 </html>
