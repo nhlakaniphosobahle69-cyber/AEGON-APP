@@ -3,147 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AEGON V3 - Security Intelligence OS</title>
+  <title>AEGON V3 | Security Intelligence OS</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap');
 
     :root {
-      --bg: #0a0e1a;
-      --bg-2: #0f1420;
-      --bg-3: #1a1f2e;
-      --panel: rgba(20, 28, 40, 0.88);
-      --panel-strong: #1a2540;
+      --bg: #070d18;
+      --bg-2: #0d1525;
+      --bg-3: #111d2d;
+      --panel: rgba(16, 24, 36, 0.82);
+      --panel-strong: rgba(22, 32, 46, 0.92);
+      --panel-soft: rgba(29, 41, 58, 0.92);
+      --line: rgba(126, 241, 255, 0.18);
+      --line-strong: rgba(0, 240, 255, 0.45);
+      --text: #edf5ff;
+      --muted: #9caec7;
       --cyan: #00f0ff;
-      --cyan-dim: #0088aa;
-      --cyan-glow: rgba(0, 240, 255, 0.3);
-      --purple: #8040ff;
-      --magenta: #ff1493;
-      --yellow: #ffed4e;
-      --text: #e8f0ff;
-      --muted: #8fa3c0;
-      --shadow-glow: 0 0 20px rgba(0, 240, 255, 0.15);
-      --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --cyan-2: #59d9ff;
+      --purple: #8a5cff;
+      --purple-2: #c77dff;
+      --yellow: #ffe65c;
+      --green: #7ef0b1;
+      --red: #ff6d7b;
+      --shadow: 0 20px 50px rgba(1, 9, 18, 0.55);
+      --glow: 0 0 18px rgba(0, 240, 255, 0.2);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at 20% 50%, rgba(128, 64, 255, 0.15), transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(0, 240, 255, 0.1), transparent 35%),
+        radial-gradient(circle at 15% 20%, rgba(138, 92, 255, 0.12), transparent 25%),
+        radial-gradient(circle at 80% 10%, rgba(0, 240, 255, 0.10), transparent 30%),
         linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
       color: var(--text);
       font-family: 'Space Grotesk', system-ui, sans-serif;
       line-height: 1.6;
-      backdrop-filter: blur(1px);
     }
 
-    @keyframes glow-pulse {
-      0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4)); }
-      50% { filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.6)); }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.25)); }
+      50% { filter: drop-shadow(0 0 18px rgba(0, 240, 255, 0.5)); }
     }
 
-    @keyframes float-in {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes scan-line {
+    @keyframes scan {
       0% { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
-    }
-
-    @keyframes cursor-blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-
-    @keyframes data-flow {
-      0% { background-position: 0% center; }
-      100% { background-position: 200% center; }
+      100% { transform: translateY(110%); }
     }
 
     @keyframes shimmer {
-      0% { background-position: -1000px 0; }
-      100% { background-position: 1000px 0; }
+      0% { background-position: -150% 0; }
+      100% { background-position: 150% 0; }
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.35; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-5px); }
+    }
+
+    .page-shell {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-shell::before,
+    .page-shell::after {
+      content: "";
+      position: fixed;
+      width: 28rem;
+      height: 28rem;
+      border-radius: 50%;
+      filter: blur(64px);
+      pointer-events: none;
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    .page-shell::before {
+      top: -5rem;
+      right: -8rem;
+      background: rgba(0, 240, 255, 0.4);
+    }
+
+    .page-shell::after {
+      left: -7rem;
+      bottom: -8rem;
+      background: rgba(138, 92, 255, 0.35);
     }
 
     header {
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: linear-gradient(135deg, rgba(15, 20, 32, 0.95), rgba(26, 37, 62, 0.85));
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 240, 255, 0.25);
-      box-shadow: var(--shadow-glow), 0 10px 40px rgba(0, 0, 0, 0.3);
+      z-index: 30;
+      background: rgba(7, 13, 24, 0.7);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.12);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 10px 34px rgba(0, 0, 0, 0.12);
     }
 
     .header-inner {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 24px 24px 20px;
+      padding: 20px 24px 18px;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
     .header-inner::before {
-      content: '';
+      content: "";
       position: absolute;
+      left: 10%;
+      right: 10%;
       top: 0;
-      left: 0;
-      right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.5), transparent);
-      animation: data-flow 3s linear infinite;
+      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.6), transparent);
     }
 
     .eyebrow {
       display: inline-block;
-      margin-bottom: 12px;
-      padding: 6px 12px;
-      border: 1.5px solid var(--cyan);
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(128, 64, 255, 0.1));
-      color: var(--cyan);
+      padding: 7px 12px;
+      border: 1px solid rgba(0, 240, 255, 0.4);
       border-radius: 999px;
-      letter-spacing: 2px;
+      background: rgba(0, 240, 255, 0.06);
+      color: var(--cyan);
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
       font-size: 0.65rem;
       font-weight: 700;
-      text-transform: uppercase;
-      box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
+      margin-bottom: 12px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 3.2vw, 3.2rem);
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
       letter-spacing: 3px;
       text-transform: uppercase;
-      background: linear-gradient(135deg, var(--cyan) 0%, #00ddff 50%, var(--purple) 100%);
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-2) 38%, var(--purple-2) 100%);
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: glow-pulse 3s ease-in-out infinite;
+      color: transparent;
+      font-weight: 800;
+      animation: glowPulse 3s ease-in-out infinite;
     }
 
     .subtitle {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 2px;
+      font-size: 0.76rem;
+      letter-spacing: 2.2px;
       text-transform: uppercase;
       font-weight: 500;
     }
@@ -151,26 +170,24 @@
     .badge {
       display: inline-block;
       margin-top: 14px;
-      background: linear-gradient(135deg, var(--yellow), #ffd700);
-      color: #0a0a0a;
       border-radius: 999px;
       padding: 8px 16px;
+      background: linear-gradient(135deg, var(--yellow), #ffd73a);
+      color: #0b0b0b;
       font-size: 0.7rem;
       font-weight: 800;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.6px;
       text-transform: uppercase;
-      box-shadow: 0 12px 30px rgba(255, 237, 78, 0.3), var(--shadow-glow);
-      animation: float-in 0.8s ease-out;
+      box-shadow: 0 18px 28px rgba(255, 230, 92, 0.2);
     }
 
     .tabs {
       position: sticky;
-      top: 110px;
-      z-index: 15;
-      background: linear-gradient(180deg, rgba(15, 20, 32, 0.92), rgba(15, 20, 32, 0.8));
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 240, 255, 0.12);
-      box-shadow: inset 0 -1px 0 rgba(0, 240, 255, 0.1);
+      top: 105px;
+      z-index: 20;
+      background: rgba(11, 17, 25, 0.72);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(126, 241, 255, 0.12);
     }
 
     .tabs-inner {
@@ -181,194 +198,277 @@
       gap: 10px;
       overflow-x: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(0, 240, 255, 0.3) rgba(20, 28, 40, 0.5);
+      scrollbar-color: rgba(0, 240, 255, 0.3) transparent;
     }
 
     .tab {
-      flex: 0 0 auto;
-      cursor: pointer;
-      border: 1.5px solid rgba(0, 240, 255, 0.2);
-      background: rgba(26, 37, 62, 0.5);
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      padding: 10px 15px;
-      border-radius: 8px;
-      transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-      user-select: none;
-      font-weight: 600;
       position: relative;
-    }
-
-    .tab::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 8px;
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), transparent);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      flex: 0 0 auto;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(38, 48, 62, 0.7);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
+      font-weight: 700;
     }
 
     .tab:hover {
-      border-color: rgba(0, 240, 255, 0.5);
-      background: rgba(0, 240, 255, 0.05);
+      border-color: rgba(0, 240, 255, 0.42);
       color: var(--cyan);
-      box-shadow: var(--shadow-glow);
+      box-shadow: var(--glow);
     }
 
     .tab.active {
       background: linear-gradient(135deg, var(--cyan), var(--purple));
-      color: var(--bg);
+      color: #071219;
       border-color: transparent;
-      font-weight: 800;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), var(--shadow-glow);
-      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0, 240, 255, 0.22);
     }
 
     .content {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 28px 24px 60px;
+      padding: 26px 24px 72px;
+      position: relative;
+      z-index: 1;
     }
 
     .hero {
       display: grid;
-      grid-template-columns: 1.3fr 1fr;
+      grid-template-columns: 1.4fr 1fr;
       gap: 20px;
-      margin-bottom: 30px;
-      animation: float-in 0.8s ease-out 0.1s both;
+      margin-bottom: 22px;
+      animation: floatUp 0.8s ease-out both;
     }
 
     .card {
-      background: linear-gradient(135deg, rgba(26, 37, 62, 0.7), rgba(20, 28, 40, 0.8));
-      border: 1.5px solid rgba(0, 240, 255, 0.2);
-      border-radius: 20px;
-      box-shadow: var(--shadow-glow), var(--shadow-deep);
-      padding: 24px;
       position: relative;
+      background: linear-gradient(135deg, rgba(19, 29, 42, 0.8), rgba(14, 22, 32, 0.9));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow);
       overflow: hidden;
-      transition: all 0.4s ease;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .card::before {
-      content: '';
+      content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      inset: 0 auto auto 0;
+      width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.7), transparent);
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 240, 255, 0.45);
-      box-shadow: var(--shadow-glow), 0 24px 60px rgba(0, 240, 255, 0.15);
+      transform: translateY(-3px);
+      border-color: rgba(0, 240, 255, 0.38);
+      box-shadow: 0 22px 50px rgba(0, 240, 255, 0.12), var(--shadow);
     }
 
     .card h3 {
       margin: 0 0 12px;
       color: var(--cyan);
-      font-size: 0.85rem;
-      letter-spacing: 1.5px;
+      font-size: 0.8rem;
+      letter-spacing: 1.7px;
       text-transform: uppercase;
     }
 
     .card p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.98rem;
+      font-size: 0.96rem;
       line-height: 1.8;
     }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
+      gap: 14px;
+      margin-top: 18px;
     }
 
     .stat {
-      border: 1.5px solid rgba(0, 240, 255, 0.2);
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), rgba(128, 64, 255, 0.05));
-      border-radius: 16px;
-      padding: 16px 12px;
-      text-align: center;
-      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      border-radius: 16px;
+      padding: 18px 12px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(138, 92, 255, 0.04));
+      border: 1px solid rgba(0, 240, 255, 0.18);
+      box-shadow: inset 0 0 18px rgba(0, 240, 255, 0.03);
     }
 
     .stat::before {
-      content: '';
+      content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.1), transparent);
-      animation: shimmer 3s infinite;
+      background: linear-gradient(135deg, transparent, rgba(0, 240, 255, 0.12), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 4s linear infinite;
     }
 
-    .stat:hover {
-      border-color: rgba(0, 240, 255, 0.5);
-      box-shadow: var(--shadow-glow);
-      transform: translateY(-2px);
+    .stat strong,
+    .stat span {
+      position: relative;
+      z-index: 1;
     }
 
     .stat strong {
       display: block;
-      font-size: 2rem;
+      font-size: clamp(1.2rem, 2vw, 2rem);
       color: var(--cyan);
-      margin-bottom: 4px;
-      position: relative;
-      z-index: 1;
+      margin-bottom: 8px;
       font-weight: 800;
     }
 
     .stat span {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .quick {
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(138, 92, 255, 0.08));
+      color: var(--cyan);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.68rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+
+    .quick:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow);
+      border-color: rgba(0, 240, 255, 0.65);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 0 16px;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 0.86rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+
+    .section-head .meta {
       color: var(--muted);
       font-size: 0.7rem;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.4px;
       text-transform: uppercase;
-      position: relative;
-      z-index: 1;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature {
+      padding: 22px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(22, 33, 47, 0.82), rgba(13, 19, 28, 0.9));
+      border: 1px solid rgba(126, 241, 255, 0.15);
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 240, 255, 0.3);
+    }
+
+    .feature-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.14), rgba(138, 92, 255, 0.15));
+      color: var(--cyan);
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+      border: 1px solid rgba(0, 240, 255, 0.25);
+    }
+
+    .feature h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
     }
 
     .board {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 18px;
-      margin-top: 20px;
-      animation: float-in 0.8s ease-out 0.2s both;
+      margin-top: 18px;
+      animation: floatUp 0.8s ease-out 0.15s both;
     }
 
     .pillar-card {
-      background: linear-gradient(135deg, rgba(26, 37, 62, 0.6), rgba(20, 28, 40, 0.7));
-      border: 1.5px solid rgba(0, 240, 255, 0.15);
-      border-radius: 18px;
-      padding: 20px;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
       position: relative;
+      border-radius: 18px;
+      padding: 20px 18px;
+      background: linear-gradient(135deg, rgba(22, 33, 47, 0.82), rgba(13, 19, 28, 0.95));
+      border: 1px solid rgba(0, 240, 255, 0.16);
+      box-shadow: var(--shadow);
       overflow: hidden;
-      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease;
     }
 
     .pillar-card::before {
-      content: '';
+      content: "";
       position: absolute;
-      top: 0;
       left: 0;
       right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.6), transparent);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .pillar-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      border-color: rgba(0, 240, 255, 0.5);
-      box-shadow: var(--shadow-glow), 0 16px 40px rgba(0, 240, 255, 0.1);
+      transform: translateY(-4px);
+      border-color: rgba(0, 240, 255, 0.4);
     }
 
     .pillar-card:hover::before {
@@ -379,7 +479,6 @@
       margin: 0 0 8px;
       color: var(--cyan);
       font-size: 1rem;
-      font-weight: 700;
       letter-spacing: 0.5px;
     }
 
@@ -398,101 +497,78 @@
     }
 
     .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 11px;
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(128, 64, 255, 0.1));
+      display: inline-block;
       border-radius: 999px;
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      border: 1px solid rgba(0, 240, 255, 0.24);
+      padding: 6px 10px;
+      background: rgba(0, 240, 255, 0.04);
       color: var(--cyan);
-      font-size: 0.65rem;
-      letter-spacing: 0.8px;
+      font-size: 0.62rem;
+      letter-spacing: 1.1px;
       text-transform: uppercase;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-
-    .pill:hover {
-      border-color: rgba(0, 240, 255, 0.6);
-      box-shadow: var(--shadow-glow);
+      font-weight: 700;
     }
 
     .chat-wrapper {
-      margin-top: 24px;
       display: grid;
       gap: 14px;
-      animation: float-in 0.8s ease-out 0.3s both;
+      margin-top: 16px;
+      animation: floatUp 0.8s ease-out 0.2s both;
     }
 
     .chat-box {
+      position: relative;
       height: 500px;
       overflow-y: auto;
-      background: linear-gradient(135deg, rgba(15, 20, 32, 0.8), rgba(20, 28, 40, 0.9));
-      border: 1.5px solid rgba(0, 240, 255, 0.2);
-      border-radius: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 240, 255, 0.18);
+      background: linear-gradient(135deg, rgba(11, 17, 25, 0.9), rgba(19, 27, 38, 0.9));
+      box-shadow: var(--shadow), inset 0 0 20px rgba(0, 240, 255, 0.04);
       padding: 18px;
-      box-shadow: var(--shadow-glow), inset 0 0 30px rgba(0, 240, 255, 0.05);
-      position: relative;
     }
 
     .chat-box::before {
-      content: '';
+      content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
-      border-radius: 18px 18px 0 0;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(0, 240, 255, 0.02), transparent);
+      pointer-events: none;
     }
 
     .msg {
-      max-width: 85%;
+      max-width: 84%;
       margin: 10px 0;
       padding: 13px 16px;
       border-radius: 14px;
       font-size: 0.92rem;
       line-height: 1.7;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-      animation: float-in 0.4s ease-out;
       word-wrap: break-word;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+      animation: floatUp 0.4s ease-out;
     }
 
     .msg.user {
       margin-left: auto;
       background: linear-gradient(135deg, var(--cyan), var(--purple));
-      color: var(--bg);
+      color: #061218;
       border-bottom-right-radius: 4px;
+      font-weight: 700;
       text-align: right;
-      font-weight: 600;
-      box-shadow: 0 8px 20px rgba(0, 240, 255, 0.25);
     }
 
     .msg.bot {
       margin-right: auto;
-      background: linear-gradient(135deg, rgba(26, 37, 62, 0.8), rgba(20, 28, 40, 0.9));
+      background: linear-gradient(135deg, rgba(27, 39, 52, 0.9), rgba(13, 19, 28, 0.94));
+      border: 1px solid rgba(0, 240, 255, 0.16);
       color: var(--text);
-      border: 1px solid rgba(0, 240, 255, 0.25);
       border-bottom-left-radius: 4px;
-      position: relative;
-    }
-
-    .msg.bot::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(0, 240, 255, 0.3), transparent);
-      border-radius: 14px 14px 0 0;
     }
 
     .typing-indicator {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 10px 14px;
+      gap: 6px;
+      padding: 8px 2px;
     }
 
     .typing-dot {
@@ -500,27 +576,11 @@
       height: 8px;
       border-radius: 50%;
       background: var(--cyan);
-      animation: typing 1.4s infinite;
+      animation: typing 1.4s infinite ease-in-out;
     }
 
-    .typing-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    .typing-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
-    @keyframes typing {
-      0%, 60%, 100% {
-        opacity: 0.3;
-        transform: translateY(0);
-      }
-      30% {
-        opacity: 1;
-        transform: translateY(-10px);
-      }
-    }
+    .typing-dot:nth-child(2) { animation-delay: 0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.32s; }
 
     .input-row {
       display: flex;
@@ -530,141 +590,131 @@
 
     .input-row input {
       flex: 1;
+      height: 52px;
       border-radius: 14px;
-      border: 1.5px solid rgba(0, 240, 255, 0.25);
-      background: linear-gradient(135deg, rgba(26, 37, 62, 0.5), rgba(20, 28, 40, 0.6));
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      background: linear-gradient(135deg, rgba(18, 27, 38, 0.95), rgba(10, 15, 22, 0.95));
       color: var(--text);
-      padding: 14px 16px;
+      padding: 0 16px;
       font-size: 0.95rem;
-      font-family: 'Space Grotesk', system-ui, sans-serif;
       outline: none;
-      transition: all 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      font-family: inherit;
     }
 
     .input-row input::placeholder {
-      color: rgba(139, 157, 176, 0.6);
+      color: rgba(156, 174, 199, 0.7);
     }
 
     .input-row input:focus {
       border-color: rgba(0, 240, 255, 0.6);
-      box-shadow: var(--shadow-glow), 0 0 0 3px rgba(0, 240, 255, 0.1);
-      background: linear-gradient(135deg, rgba(26, 37, 62, 0.7), rgba(20, 28, 40, 0.8));
+      box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.08), var(--glow);
     }
 
     .input-row button {
       border: none;
       border-radius: 14px;
-      padding: 14px 20px;
+      min-width: 58px;
+      height: 52px;
       background: linear-gradient(135deg, var(--cyan), var(--purple));
-      color: var(--bg);
+      color: #061218;
+      font-size: 1.4rem;
       font-weight: 800;
       cursor: pointer;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      font-family: 'Space Grotesk', system-ui, sans-serif;
-      transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-      box-shadow: 0 10px 25px rgba(0, 240, 255, 0.3);
+      box-shadow: 0 16px 28px rgba(0, 240, 255, 0.2);
+      transition: transform 0.2s ease, filter 0.2s ease;
     }
 
     .input-row button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 35px rgba(0, 240, 255, 0.4);
-      filter: brightness(1.1);
+      transform: translateY(-2px);
+      filter: brightness(1.06);
     }
 
-    .input-row button:active {
-      transform: translateY(-1px);
+    .cta {
+      margin-top: 28px;
+      padding: 22px 16px 0;
+      text-align: center;
     }
 
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .quick {
-      border: 1.5px solid rgba(0, 240, 255, 0.4);
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(128, 64, 255, 0.08));
-      color: var(--cyan);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 0.7rem;
-      font-weight: 700;
+    .cta button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 26px;
+      font-size: 0.72rem;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      color: #071219;
+      box-shadow: 0 18px 30px rgba(0, 240, 255, 0.2);
       cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.8px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      border-top: 1px solid rgba(126, 241, 255, 0.12);
+      padding-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
     }
 
-    .quick:hover {
-      border-color: rgba(0, 240, 255, 0.7);
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(128, 64, 255, 0.15));
-      box-shadow: var(--shadow-glow);
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 860px) {
+    @media (max-width: 900px) {
       .hero {
         grid-template-columns: 1fr;
       }
 
-      .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .content,
+      .header-inner,
+      .tabs-inner {
+        padding-left: 16px;
+        padding-right: 16px;
       }
 
-      .tabs-inner {
-        padding: 10px 20px;
+      .feature-grid,
+      .stats {
+        grid-template-columns: 1fr;
       }
 
       .msg {
         max-width: 92%;
       }
 
-      h1 {
-        font-size: 2rem;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .content {
-        padding: 20px 16px 50px;
+      .input-row {
+        flex-direction: column;
       }
 
-      .card {
-        padding: 18px;
-      }
-
-      .chat-box {
-        height: 380px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .board {
-        grid-template-columns: 1fr;
+      .input-row button {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="eyebrow">🔐 Security Intelligence OS</div>
-      <h1>AEGON V3</h1>
-      <p class="subtitle">Unified Threat Response Platform</p>
-      <div class="badge">12 Pillars Active</div>
-    </div>
-  </header>
+  <div class="page-shell">
+    <header>
+      <div class="header-inner">
+        <div class="eyebrow">Security Intelligence OS</div>
+        <h1>AEGON V3</h1>
+        <p class="subtitle">Unified Threat Response Platform</p>
+        <div class="badge">12 Pillars Live</div>
+      </div>
+    </header>
 
-  <nav class="tabs" aria-label="AEGON V3 Navigation">
-    <div class="tabs-inner" id="tabs"></div>
-  </nav>
+    <nav class="tabs" aria-label="AEGON V3 tabs">
+      <div class="tabs-inner" id="tabs"></div>
+    </nav>
 
-  <main class="content" id="main"></main>
+    <main class="content" id="main"></main>
+  </div>
 
   <script>
     const pillars = {
@@ -672,108 +722,108 @@
       "1 SIGNAL": {
         type: "pillars",
         items: [
-          { title: "Signal vs Noise", desc: "Clean the signal by separating real threats from simulations, noise, and weak alerts. AI-driven enrichment." },
-          { title: "Context Layer", desc: "Map entities, activity, and patterns into a decision-ready operating picture. Real-time correlation." },
-          { title: "Adversary Lens", desc: "Assess risk through the mindset of actors, motives, and attack paths. Behavior modeling." }
+          { title: "Signal vs Noise", desc: "Separate real threats from churn, weak alerts, and irrelevant background activity using confidence scoring and adaptive filtering." },
+          { title: "Context Layer", desc: "Correlate identity, behavior, assets, and timing into an operationally meaningful picture of risk." },
+          { title: "Adversary Lens", desc: "Understand attacker behavior, tactics, and intent to distinguish routine noise from strategic movement." }
         ],
         tags: ["Threat Detection", "Filtering", "Confidence"]
       },
       "2 REAL-TIME": {
         type: "pillars",
         items: [
-          { title: "Live Delivery", desc: "Push critical insights to teams in seconds, not after the window has closed. Streaming architecture." },
-          { title: "Unified Events", desc: "Correlate fragmented telemetry into one coherent story. Single source of truth." },
-          { title: "Time-to-Action", desc: "Reduce response latency and compress decision windows. Sub-second integration." }
+          { title: "Live Delivery", desc: "Stream intelligence to operators as events unfold so decisions are based on current reality, not delayed reporting." },
+          { title: "Unified Events", desc: "Collate telemetry across systems and channels into one coherent timeline of response-critical events." },
+          { title: "Time-to-Action", desc: "Reduce reaction time and compress action windows by connecting detection to decision-making instantly." }
         ],
         tags: ["Speed", "Ops", "Response"]
       },
       "3 RISK": {
         type: "pillars",
         items: [
-          { title: "Risk Prioritization", desc: "Focus resources on events with the highest impact, urgency, and confidence. ML ranking." },
-          { title: "Business Impact", desc: "Translate technical signals into operational and business risk. Executive ready." },
-          { title: "Exposure Mapping", desc: "Measure where vulnerability, activity, and sensitivity intersect. CVSS + context." }
+          { title: "Risk Prioritization", desc: "Rank issues by urgency, business impact, and confidence so teams act on the most consequential threats first." },
+          { title: "Business Impact", desc: "Translate technical signals into business risk language for leadership, IT, and operational teams." },
+          { title: "Exposure Mapping", desc: "Connect vulnerability, activity, and sensitivity to reveal where risk is most concentrated." }
         ],
         tags: ["Priority", "Coverage", "Exposure"]
       },
       "4 ALERT": {
         type: "pillars",
         items: [
-          { title: "Alert Quality", desc: "Eliminate low-value alert churn with sharper logic and stronger enrichment. 90% noise reduction." },
-          { title: "False Positive Control", desc: "Suppress noise while preserving high-confidence indicators. Precision tuning." },
-          { title: "Escalation Rules", desc: "Route only actionable alerts to the right responders and channels. Smart routing." }
+          { title: "Alert Quality", desc: "Reduce low-value noise with better enrichment, richer correlation, and sharper detection logic." },
+          { title: "False Positive Control", desc: "Suppress low-confidence noise while preserving high-value indicators that demand immediate attention." },
+          { title: "Escalation Rules", desc: "Automatically route the right level of alert to the correct responders and channels." }
         ],
         tags: ["Automation", "Triage", "Routing"]
       },
       "5 INTEL": {
         type: "pillars",
         items: [
-          { title: "Threat Intel", desc: "Blend indicators, intent, and patterns into a usable intelligence layer. TIP integration." },
-          { title: "Pattern Recognition", desc: "Identify recurring behaviors across campaigns, infrastructure, and actors. TTPs." },
-          { title: "Awareness", desc: "Keep teams aligned around nearby threats, movement, and blast radius. Live feeds." }
+          { title: "Threat Intel", desc: "Blend indicators, intent, emerging trends, and external context into a usable intelligence layer." },
+          { title: "Pattern Recognition", desc: "Detect repeated tactics, behaviors, and actor signatures across campaigns and infrastructure." },
+          { title: "Situational Awareness", desc: "Keep teams aligned on surrounding threats, lateral movement, and change in attack posture." }
         ],
         tags: ["Intel", "Patterns", "Awareness"]
       },
       "6 FORENSICS": {
         type: "pillars",
         items: [
-          { title: "Root Cause Review", desc: "Diagnose the chain of events behind suspicious activity. Causality mapping." },
-          { title: "Evidence Timeline", desc: "Recreate the sequence of activity into a reviewable timeline. Auditable trail." },
-          { title: "Decision Audit", desc: "Support investigations with traceable actions and outcomes. Compliance ready." }
+          { title: "Root Cause Review", desc: "Identify the sequence of events behind suspicious activity and determine the underlying trigger." },
+          { title: "Evidence Timeline", desc: "Recreate the timeline of actions into a reviewable chain of evidence for investigation and audit." },
+          { title: "Decision Audit", desc: "Capture what happened, who responded, and why in a way that is operationally explainable and defensible." }
         ],
         tags: ["Investigation", "Audit", "Timeline"]
       },
       "7 ORCHESTRATION": {
         type: "pillars",
         items: [
-          { title: "Workflow Coordination", desc: "Connect intelligence, actions, and human decisions in one system. Unified platform." },
-          { title: "Playbooks", desc: "Standardize response paths for recurring risk categories. Runbook automation." },
-          { title: "Cross-Team Sync", desc: "Keep security, ops, and leadership aligned. Shared context." }
+          { title: "Workflow Coordination", desc: "Connect intelligence, actions, and human decisions into one operational system of record." },
+          { title: "Playbooks", desc: "Define repeatable response steps for recurring incidents, attack paths, and risk categories." },
+          { title: "Cross-Team Sync", desc: "Keep security, operations, and leadership aligned through shared context and coordinated response." }
         ],
         tags: ["Playbooks", "Response", "Ops"]
       },
       "8 RESILIENCE": {
         type: "pillars",
         items: [
-          { title: "Recovery Readiness", desc: "Prepare for disruption with resilient workflows and action paths. Continuity plans." },
-          { title: "Continuity Signals", desc: "Track operational health, dependencies, and failure modes. Live health." },
-          { title: "Degradation Alerts", desc: "Spot when risk is shifting before it becomes an outage. Early warning." }
+          { title: "Recovery Readiness", desc: "Prepare teams and systems to recover quickly and decisively after disruption or compromise." },
+          { title: "Continuity Signals", desc: "Track service health, dependencies, and early warning signs before they become operational failures." },
+          { title: "Degradation Alerts", desc: "Spot shifting risk conditions before they escalate into full outage or loss-of-service events." }
         ],
         tags: ["Recovery", "Continuity", "Health"]
       },
       "9 GOVERNANCE": {
         type: "pillars",
         items: [
-          { title: "Policy Alignment", desc: "Ensure actions align to governance and control expectations. Compliance first." },
-          { title: "Compliance Signals", desc: "Convert regulatory requirements into operational checks. Automated controls." },
-          { title: "Accountability", desc: "Maintain accountability across approvals and actions. Full audit trail." }
+          { title: "Policy Alignment", desc: "Ensure actions and decisions reflect policy expectations, control objectives, and governance standards." },
+          { title: "Compliance Signals", desc: "Translate control requirements into measurable operational checks and accountability workflows." },
+          { title: "Accountability", desc: "Maintain clear ownership and audit trails across approvals, triage, and action outcomes." }
         ],
         tags: ["Governance", "Policy", "Compliance"]
       },
       "10 REPORTING": {
         type: "pillars",
         items: [
-          { title: "Executive Reporting", desc: "Turn operational detail into concise leadership insight. Exec dashboards." },
-          { title: "Analyst Briefs", desc: "Surface lessons, trends, and risk narratives. Daily reporting." },
-          { title: "Performance View", desc: "Measure system effectiveness and response maturity. KPIs." }
+          { title: "Executive Reporting", desc: "Turn operational detail into concise, leadership-ready narratives and strategic insight." },
+          { title: "Analyst Briefs", desc: "Deliver precise, actionable summaries of trends, emerging risks, and tactical recommendations." },
+          { title: "Performance View", desc: "Measure signal quality, response maturity, and platform effectiveness across teams and time." }
         ],
         tags: ["Narrative", "Metrics", "Briefs"]
       },
       "11 AI": {
         type: "pillars",
         items: [
-          { title: "Assistive Intelligence", desc: "Use AI to summarize, prioritize, and contextualize workflows. Smart assist." },
-          { title: "Human-in-the-Loop", desc: "Keep operators in control by validating recommendations. Explainable AI." },
-          { title: "Adaptive Learning", desc: "Continuously improve with feedback from analysts and outcomes. Self-tuning." }
+          { title: "Assistive Intelligence", desc: "Use AI to summarize large datasets, prioritize events, and present context-rich recommendations." },
+          { title: "Human-in-the-Loop", desc: "Keep operators in charge with explainable, reviewable recommendations that support trust and accountability." },
+          { title: "Adaptive Learning", desc: "Continuously improve signal quality through analyst feedback, outcomes, and operational learning loops." }
         ],
         tags: ["AI", "Assist", "Learning"]
       },
       "12 COMMAND": {
         type: "pillars",
         items: [
-          { title: "Command View", desc: "Provide a central lens for awareness, direction, and control. War room ready." },
-          { title: "Decision Support", desc: "Give leaders clear view of priorities, dependencies, and consequences. Decision ready." },
-          { title: "Confidence", desc: "Stabilize decisions through visibility, structure, and shared context. Trust." }
+          { title: "Command View", desc: "Provide a unified operational perspective that supports awareness, direction, and decisive action." },
+          { title: "Decision Support", desc: "Help leaders understand priorities, dependencies, and consequences in a single command frame." },
+          { title: "Operational Confidence", desc: "Stabilize decisions with clarity, shared context, and a structured view of current threat posture." }
         ],
         tags: ["Command", "Decision", "Control"]
       }
@@ -793,9 +843,9 @@
 
     function renderTabs() {
       const tabs = document.getElementById("tabs");
-      tabs.innerHTML = tabNames.map((tab) => `
-        <div class="tab ${tab === active ? "active" : ""}" onclick="switchTab('${tab}')">${tab}</div>
-      `).join("");
+      tabs.innerHTML = tabNames.map(tab => `
+        <div class="tab ${tab === active ? 'active' : ''}" onclick="switchTab('${tab}')">${tab}</div>
+      `).join('');
     }
 
     function switchTab(tab) {
@@ -806,84 +856,107 @@
     }
 
     function renderMain() {
-      const main = document.getElementById("main");
+      const main = document.getElementById('main');
       const data = pillars[active];
-
       if (!data) return;
 
-      if (active === "CHAT") {
+      if (active === 'CHAT') {
         main.innerHTML = `
           <section class="hero">
             <div class="card">
-              <h3>🤖 Advanced AI Assistant</h3>
-              <p>Ask about any pillar, signal flow, risk assessment, or operational workflow. This AI is trained on AEGON's entire threat intelligence framework and can explain complex concepts in operator terms.</p>
+              <h3>Advanced AI Assistant</h3>
+              <p>Ask about signal quality, threat intelligence, response workflow, governance, or any operating pillar. AEGON V3 explains the model in language built for operators, analysts, and decision-makers.</p>
               <div class="stats">
-                <div class="stat">
-                  <strong>12</strong>
-                  <span>Pillars</span>
-                </div>
-                <div class="stat">
-                  <strong>360°</strong>
-                  <span>Context</span>
-                </div>
-                <div class="stat">
-                  <strong>&lt;1s</strong>
-                  <span>Response</span>
-                </div>
+                <div class="stat"><strong>12</strong><span>Pillars</span></div>
+                <div class="stat"><strong>360°</strong><span>Context</span></div>
+                <div class="stat"><strong>Live</strong><span>Signals</span></div>
               </div>
             </div>
+
             <div class="card">
-              <h3>💡 Suggested Questions</h3>
+              <h3>Prompt Suggestions</h3>
               <div class="quick-actions">
-                <div class="quick" onclick="ask('Explain signal vs noise')">Signal vs noise</div>
-                <div class="quick" onclick="ask('How does alert fatigue get reduced?')">Alert fatigue</div>
-                <div class="quick" onclick="ask('What is risk prioritization?')">Risk prioritization</div>
-                <div class="quick" onclick="ask('Explain the command view')">Command view</div>
-                <div class="quick" onclick="ask('How does AI assist in AEGON?')">AI assistance</div>
-                <div class="quick" onclick="ask('What is the threat intelligence layer?')">Threat intel</div>
+                <div class="quick" onclick="ask('Explain signal vs noise')">Signal vs Noise</div>
+                <div class="quick" onclick="ask('How does AEGON reduce alert fatigue?')">Alert Fatigue</div>
+                <div class="quick" onclick="ask('What is risk prioritization?')">Risk Prioritization</div>
+                <div class="quick" onclick="ask('Explain the command view')">Command View</div>
+                <div class="quick" onclick="ask('How does AI help in AEGON?')">AI Assistance</div>
+                <div class="quick" onclick="ask('What is the threat intelligence layer?')">Threat Intel</div>
               </div>
             </div>
           </section>
+
+          <div class="section-head">
+            <h2>Command Center</h2>
+            <div class="meta">AI + Analyst Workflow</div>
+          </div>
+
+          <section class="feature-grid">
+            <div class="feature">
+              <div class="feature-icon">⚡</div>
+              <h4>Real-Time Context</h4>
+              <p>Streams enriched events and operational context into a single decision-ready interface.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🛡️</div>
+              <h4>Threat Prioritization</h4>
+              <p>Ranks risks by confidence, impact, and urgency so the team focuses on what matters most.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🧠</div>
+              <h4>AI-guided Analysis</h4>
+              <p>Summarizes patterns, reduces noise, and supports the analyst with explainable context.</p>
+            </div>
+          </section>
+
           <section class="chat-wrapper">
             <div class="chat-box" id="chat">
-              <div class="msg bot">Welcome to AEGON V3 Command Center. I'm your AI guide to the 12-pillar security intelligence architecture. Ask me about threat detection, response workflows, governance, or any aspect of unified threat response. How can I assist you today?</div>
+              <div class="msg bot">Welcome to AEGON V3 Command Center. I’m your AI guide to the platform’s 12-pillar security intelligence model. Ask me about signal filtering, risk prioritization, operational response, governance, or AI-enabled decision support.</div>
             </div>
             <div class="input-row">
-              <input id="q" type="text" placeholder="What would you like to know about AEGON V3?" aria-label="Chat with AEGON V3" onkeypress="if(event.key==='Enter') send()" />
-              <button onclick="send()">→</button>
+              <input id="q" type="text" placeholder="Ask AEGON V3 about any pillar, workflow, or risk concept..." aria-label="Ask AEGON V3" onkeydown="if(event.key === 'Enter') send()" />
+              <button aria-label="Send message" onclick="send()">→</button>
             </div>
           </section>
+
+          <div class="cta">
+            <button onclick="ask('Give me a full summary of AEGON V3')">Ask for a full overview</button>
+          </div>
         `;
         return;
       }
 
       main.innerHTML = `
+        <div class="section-head">
+          <h2>${active}</h2>
+          <div class="meta">Core pillar</div>
+        </div>
+
         <section class="card">
-          <h3>📊 ${active}</h3>
-          <p>${data.tags ? data.tags.map(tag => `<span class="pill">${tag}</span>`).join(" ") : ""}</p>
+          <p>${data.tags ? data.tags.map(tag => `<span class="pill">${tag}</span>`).join(' ') : ''}</p>
         </section>
+
         <section class="board">
           ${data.items.map(item => `
             <article class="pillar-card">
               <h4>${item.title}</h4>
               <p>${item.desc}</p>
             </article>
-          `).join("")}
+          `).join('')}
         </section>
       `;
     }
 
     function ask(prompt) {
-      const input = document.getElementById("q");
-      if (input) {
-        input.value = prompt;
-        setTimeout(() => send(), 100);
-      }
+      const input = document.getElementById('q');
+      if (!input) return;
+      input.value = prompt;
+      setTimeout(send, 100);
     }
 
     function send() {
-      const input = document.getElementById("q");
-      const chat = document.getElementById("chat");
+      const input = document.getElementById('q');
+      const chat = document.getElementById('chat');
       if (!input || !chat) return;
 
       const q = input.value.trim();
@@ -891,50 +964,50 @@
 
       chat.innerHTML += `<div class="msg user">${escapeHtml(q)}</div>`;
 
-      // Show typing indicator
-      const typingId = "typing-" + Date.now();
+      const typingId = 'typing-' + Date.now();
       chat.innerHTML += `<div class="msg bot" id="${typingId}"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
       chat.scrollTop = chat.scrollHeight;
 
       const lower = q.toLowerCase();
-      let answer = "AEGON is a unified threat response platform built on 12 pillars. Each pillar is a domain of security intelligence—from signal filtering to command decision-making. Ask about any specific pillar or concept and I'll explain how it works in practice.";
+      let answer = "AEGON V3 connects signal quality, prioritization, response orchestration, and command visibility into a single intelligence system. It is built to help teams move from raw alerts to confident, timely action.";
 
-      if (lower.includes("signal") || lower.includes("noise")) {
-        answer = "Signal vs noise is Pillar 1: the foundation. Real threats are distinguished from background chatter, false positives, and simulation. AEGON filters using AI enrichment, entity correlation, and confidence scoring. The goal: reduce noise by 90% while keeping high-confidence signals intact.";
-      } else if (lower.includes("alert") || lower.includes("fatigue")) {
-        answer = "Alert fatigue is solved through Pillar 4: Alert Quality. Three key mechanisms: (1) eliminate low-value alerts with sharper detection logic, (2) suppress false positives while preserving true signals, (3) route only actionable alerts to the right responders. Result: fewer alerts, higher action rate.";
-      } else if (lower.includes("risk") || lower.includes("priorit")) {
-        answer = "Pillar 3: Risk Prioritization. AEGON ranks events by impact, urgency, and confidence. This translates technical signals into business risk language, maps where vulnerability meets activity, and surfaces the highest-consequence threats first. Teams focus resources where it matters most.";
-      } else if (lower.includes("real") || lower.includes("time")) {
-        answer = "Pillar 2: Real-Time Delivery. Intelligence flows in seconds via streaming architecture. Fragmented telemetry is unified into one coherent story. Response windows shrink dramatically. Operators get decision-ready insight while the threat is still active, not in post-mortems.";
-      } else if (lower.includes("governance") || lower.includes("policy") || lower.includes("compliance")) {
-        answer = "Pillar 9: Governance. AEGON ensures all actions align to policy, controls, and regulatory expectations. Compliance rules are converted into automated checks. Every decision is auditable. This bridges the gap between security operations and compliance/audit requirements.";
-      } else if (lower.includes("ai") || lower.includes("assistant") || lower.includes("intelligence")) {
-        answer = "Pillar 11: AI. AEGON uses assistive intelligence to summarize large datasets, prioritize events, and contextualize workflows. Critical: human-in-the-loop keeps operators in control. The AI explains its reasoning (explainable), learns from feedback, and continuously improves. Trust through transparency.";
-      } else if (lower.includes("command") || lower.includes("leader") || lower.includes("executive")) {
-        answer = "Pillar 12: Command View. This is the unified lens for awareness, direction, and operational control. Leaders see priorities, dependencies, and consequences at a glance. Decision support tools translate technical risk into strategic language. War room ready.";
-      } else if (lower.includes("forensics") || lower.includes("investigation") || lower.includes("timeline")) {
-        answer = "Pillar 6: Forensics. Root cause analysis through event chain reconstruction. Evidence is organized into a reviewable timeline with full traceability. Every decision is auditable. This supports investigations, compliance reviews, and post-incident learning.";
-      } else if (lower.includes("orchestration") || lower.includes("playbook") || lower.includes("workflow")) {
-        answer = "Pillar 7: Orchestration. This connects intelligence, automated actions, and human decisions in one platform. Standardized playbooks automate recurring response patterns. Cross-team sync keeps everyone aligned with shared context and single source of truth.";
-      } else if (lower.includes("threat") || lower.includes("intel")) {
-        answer = "Pillar 5: Intelligence. AEGON blends threat indicators, adversary intent, and behavioral patterns into a usable intelligence layer. TIP integration brings external intelligence. Pattern recognition identifies recurring TTPs. Situational awareness keeps teams focused on active, nearby threats.";
-      } else if (lower.includes("resilience") || lower.includes("recovery") || lower.includes("continuity")) {
-        answer = "Pillar 8: Resilience. Prepare for disruption with recovery readiness planning. AEGON continuously tracks operational health, dependencies, and failure modes. Degradation alerts surface emerging risks before they become outages. Resilient workflows ensure continuity under pressure.";
-      } else if (lower.includes("reporting") || lower.includes("metrics") || lower.includes("kpi")) {
-        answer = "Pillar 10: Reporting. Executive reporting distills operational detail into concise leadership insight. Analyst briefs surface trends and risk narratives. KPI dashboards measure system effectiveness and response maturity. Data-driven accountability at every level.";
+      if (lower.includes('signal') || lower.includes('noise')) {
+        answer = "Signal vs noise is the foundation of AEGON. It distinguishes genuine operational threats from false alarms, weak indicators, and background chatter. By enriching and correlating signals with context, confidence, and adversary behavior, the platform reduces noise while keeping meaningful risk visible.";
+      } else if (lower.includes('alert') || lower.includes('fatigue')) {
+        answer = "AEGON reduces alert fatigue by refining what reaches the analyst. It filters low-value noise, suppresses false positives, scores events by impact and confidence, and routes only the most actionable alerts to the right team. This sharpens judgment and preserves response capacity.";
+      } else if (lower.includes('risk') || lower.includes('priorit')) {
+        answer = "Risk prioritization is a core pillar. AEGON ranks events by severity, urgency, exposure, and business impact. That means the team focuses on the highest-consequence issues first instead of reacting to every signal at the same intensity.";
+      } else if (lower.includes('time') || lower.includes('real')) {
+        answer = "Real-time delivery gives operators insight while the event is still active. Your telemetry is correlated, enriched, and presented in context instantly. That reduces response time and allows the team to act before conditions worsen or spread.";
+      } else if (lower.includes('governance') || lower.includes('policy') || lower.includes('compliance')) {
+        answer = "Governance keeps operations aligned with risk appetite, policy, and compliance expectations. AEGON turns those requirements into operational signals and auditable processes. Every action can be traced, reviewed, and explained.";
+      } else if (lower.includes('ai') || lower.includes('intelligence') || lower.includes('assistant')) {
+        answer = "AI in AEGON acts as assistive intelligence. It summarizes large volumes of data, highlights patterns, and makes context visible for faster decisions. The important part is the human-in-the-loop: analysts remain accountable, review recommendations, and guide final action.";
+      } else if (lower.includes('command') || lower.includes('executive') || lower.includes('leader')) {
+        answer = "The command view keeps leadership and responders aligned through a unified picture. It converts technical complexity into clear operational direction, telling teams what matters now, what is likely next, and why the issue deserves attention.";
+      } else if (lower.includes('forensic') || lower.includes('investigation') || lower.includes('timeline')) {
+        answer = "Forensics reconstructs the event chain. AEGON organizes evidence into a timeline so analysts can determine root cause, review actions, and validate what happened. This becomes the foundation for both investigation and accountability.";
+      } else if (lower.includes('orchestration') || lower.includes('playbook') || lower.includes('workflow')) {
+        answer = "Orchestration connects detection, workstreams, and human response into a structured action model. Standardized playbooks guide recurring responses, while cross-team coordination ensures everyone works from the same operational context.";
+      } else if (lower.includes('threat') || lower.includes('intel')) {
+        answer = "Threat intelligence gives context to raw events. AEGON blends internal telemetry with external threat signals, actor behavior, and pattern recognition so a single event can be understood in broader operational context.";
+      } else if (lower.includes('resilience') || lower.includes('recovery') || lower.includes('continuity')) {
+        answer = "Resilience ensures operations remain recoverable under pressure. AEGON tracks health, dependencies, and degradation indicators early so the team can respond before service impact becomes serious disruption.";
+      } else if (lower.includes('report') || lower.includes('metric') || lower.includes('kpi')) {
+        answer = "Reporting converts operational detail into measurable confidence and narrative clarity. Leadership sees the right information at the right level, while analysts see the trend lines and precision that shape better decisions.";
+      } else if (lower.includes('full summary') || lower.includes('overview')) {
+        answer = "AEGON V3 is a 12-pillar security intelligence platform that brings together signal quality, real-time detection, risk prioritization, alert tuning, intelligence fusion, forensic review, orchestration, resilience, governance, reporting, AI assistance, and command-level decision support. It turns raw security data into a unified, actionable operational system.";
       }
 
-      // Simulate typing delay, then replace
       setTimeout(() => {
         const typingEl = document.getElementById(typingId);
         if (typingEl) {
-          typingEl.innerHTML = answer;
+          typingEl.innerHTML = `<div class="msg bot">${answer}</div>`;
         }
         chat.scrollTop = chat.scrollHeight;
-      }, 800 + Math.random() * 600);
+      }, 700 + Math.random() * 600);
 
-      input.value = "";
+      input.value = '';
     }
 
     renderTabs();
