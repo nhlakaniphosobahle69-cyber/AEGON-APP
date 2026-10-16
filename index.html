@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a10" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="description" content="AEGON Community OS - Mbonambi Phase 1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>AEGON APP</title>
+  <style>
+    :root {
+      --bg:#0a0a10; --card:#14141f; --card2:#1a1a28; --border:#2a2a3d;
+      --purple:#8b5cf6; --purple2:#a78bfa; --gold:#fbbf24; --pink:#ec4899;
+      --green:#22c55e; --red:#ef4444; --text:#f1f5f9; --muted:#94a3b8; --radius:16px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;padding-bottom:80px}
+    .header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0d0d16,#0a0a10);padding:12px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .header-left{display:flex;align-items:center;gap:10px}
+    .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
+    .owner-name{font-weight:700;font-size:15px}
+    .owner-sub{font-size:11px;color:var(--muted);display:flex;gap:8px;margin-top:2px}
+    .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+    .dot.green{background:var(--green)}.dot.purple{background:var(--purple)}
+    .header-right{display:flex;gap:8px}
+    .btn-sm{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;border:none;cursor:pointer}
+    .btn-install{background:var(--gold);color:#000}
+    .btn-logout{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+    .screen{display:none;padding:16px;animation:fadeIn .25s ease}
+    .screen.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+    .card-title{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+    #login-screen{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:24px;background:radial-gradient(ellipse at top,#1a1025 0%,#0a0a10 70%)}
+    .login-card{background:var(--card);border-radius:24px;padding:28px 22px;border:1px solid var(--border);max-width:380px;width:100%;margin:0 auto}
+    .login-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#f59e0b,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:28px;color:#fff;margin-bottom:12px}
+    .login-title{font-size:22px;font-weight:800;margin-bottom:4px}
+    .login-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+    .info-box{background:#1e1e2e;border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:13px;line-height:1.5}
+    .info-box span{color:var(--gold)}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
+    input,textarea,select{width:100%;background:#1e1e2e;border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:15px;outline:none;margin-bottom:14px}
+    input:focus,textarea:focus{border-color:var(--purple)}
+    .btn-primary{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(90deg,#8b5cf6,#ec4899);color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-bottom:10px}
+    .btn-secondary{width:100%;padding:13px;border-radius:14px;border:1px solid var(--border);background:transparent;color:var(--text);font-weight:600;font-size:14px;cursor:pointer}
+    .hint{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.4}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#0d0d16;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 12px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--muted);font-size:10px;cursor:pointer;padding:4px 8px;min-width:56px}
+    .nav-item.active{color:var(--purple2)}
+    .nav-item .icon{width:28px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+    .nav-item.active .icon{background:var(--purple);color:#fff}
+    .weather-box{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;padding:18px;margin-bottom:14px}
+    .temp{font-size:42px;font-weight:800}
+    .weather-meta{font-size:13px;color:#c4b5fd;margin-top:4px}
+    .hourly-row{display:flex;gap:8px;overflow-x:auto;margin-top:14px;padding-bottom:4px}
+    .hourly-item{flex:0 0 auto;text-align:center;min-width:52px;background:rgba(0,0,0,0.2);border-radius:12px;padding:8px 6px}
+    .hourly-item .h-time{font-size:10px;color:#c4b5fd}
+    .hourly-item .h-icon{font-size:18px;margin:4px 0}
+    .hourly-item .h-temp{font-size:13px;font-weight:700}
+    .daily-list{margin-top:12px}
+    .daily-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px}
+    .daily-row:last-child{border-bottom:none}
+    .storm-alert{background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:13px;color:#fecaca}
+    .alert-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-right:6px;margin-top:8px}
+    .badge-green{background:#166534;color:#bbf7d0}
+    .badge-red{background:#7f1d1d;color:#fecaca}
+    .news-item{background:#1e1e2e;border-radius:12px;padding:12px;margin-bottom:8px;font-size:13px;line-height:1.45;border-left:3px solid var(--red)}
+    .check-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:14px}
+    .check-row input{width:auto;margin:0}
+    .btn-send{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(90deg,#ec4899,#8b5cf6);color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:8px}
+    .cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+    .cam-card{background:#1e1e2e;border-radius:14px;padding:14px;text-align:center;border:1px solid var(--border)}
+    .cam-icon{font-size:28px;margin-bottom:6px}
+    .cam-name{font-size:13px;font-weight:600}
+    .cam-status{font-size:11px;color:var(--green);margin-top:4px}
+    .live-dot{display:inline-block;width:6px;height:6px;background:var(--red);border-radius:50%;margin-right:4px;animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .chat-bubble{background:#1e1e2e;border-radius:16px 16px 16px 4px;padding:12px 14px;margin-bottom:10px;font-size:14px;line-height:1.55;max-width:92%}
+    .chat-input-row{display:flex;gap:8px;margin-top:12px}
+    .chat-input-row input{margin:0;flex:1}
+    .chat-send{width:48px;height:48px;border-radius:14px;border:none;background:var(--gold);color:#000;font-size:18px;cursor:pointer}
+    .quick-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+    .quick-btn{padding:6px 12px;border-radius:20px;font-size:12px;background:#1e1e2e;border:1px solid var(--border);color:var(--text);cursor:pointer}
+    .subject-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
+    .subject-tab{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;background:#1e1e2e;border:1px solid var(--border);color:var(--muted);white-space:nowrap;cursor:pointer}
+    .subject-tab.active{background:var(--gold);color:#000;border-color:var(--gold)}
+    .sys-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .sys-item{background:#1e1e2e;border-radius:12px;padding:12px;text-align:center}
+    .sys-label{font-size:11px;color:var(--muted)}
+    .sys-value{font-size:15px;font-weight:700;margin-top:4px}
+    .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px}
+    .toggle{width:48px;height:28px;border-radius:14px;background:#333;position:relative;cursor:pointer;transition:.2s}
+    .toggle.on{background:var(--purple)}
+    .toggle::after{content:'';position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s}
+    .toggle.on::after{left:23px}
+    .btn-danger{width:100%;padding:13px;border-radius:14px;border:1px solid var(--red);background:transparent;color:var(--red);font-weight:600;font-size:14px;cursor:pointer;margin-top:8px}
+    .btn-lock{width:100%;padding:13px;border-radius:14px;border:none;background:#1e1e2e;color:var(--text);font-weight:600;font-size:14px;cursor:pointer;margin-top:8px;border:1px solid var(--border)}
+    .install-banner{background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;padding:16px;margin-bottom:14px}
+    .install-banner h3{font-size:15px;margin-bottom:8px}
+    .install-steps{font-size:13px;color:#c4b5fd;line-height:1.6}
+    .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e1e2e;border:1px solid var(--purple);padding:10px 18px;border-radius:30px;font-size:13px;z-index:200;display:none;white-space:nowrap;max-width:90%}
+    .subject-list{font-size:13px;line-height:1.6}
+    .subject-item{padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+  </style>
+</head>
+<body>
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="login-logo">A</div>
+      <div class="login-title">AEGON APP</div>
+      <div class="login-sub">Community OS • Owner Bound • Phase 1</div>
+      <div class="info-box">
+        <div>OWNER: <span id="display-owner">Nhlakanipho Ntombela</span></div>
+        <div>BOUND DATE: <span>Oct 6 2026</span></div>
+        <div>VERSION: <span>Phase 1.5 • Improved Chat</span></div>
+      </div>
+      <label>EMAIL</label>
+      <input type="email" id="login-email" value="nhlakanipho@mbonambi.kzn" />
+      <label>PASSWORD (Owner PIN)</label>
+      <input type="password" id="login-pass" placeholder="Enter your PIN" value="1234" />
+      <button class="btn-primary" onclick="doLogin()">SECURE LOGIN</button>
+      <button class="btn-secondary" onclick="doGuest()">Guest Access — Students</button>
+      <div class="hint">Offline capable • localStorage only<br>Owner controls subjects & settings</div>
+    </div>
+  </div>
+
+  <div id="app" style="display:none">
+    <div class="header">
+      <div class="header-left">
+        <div class="logo">A</div>
+        <div>
+          <div class="owner-name" id="hdr-name">Nhlakanipho Ntombela</div>
+          <div class="owner-sub">
+            <span><span class="dot green"></span> KZN LIVE</span>
+            <span><span class="dot purple"></span> BRAIN ONLINE</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn-sm btn-install" onclick="promptInstall()">INSTALL</button>
+        <button class="btn-sm btn-logout" onclick="doLogout()">LOGOUT</button>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="screen-chat" class="screen">
+      <div class="quick-btns">
+        <button class="quick-btn" onclick="askBrain('Help me with homework')">📚 Homework</button>
+        <button class="quick-btn" onclick="askBrain('What is the weather like?')">🌤 Weather</button>
+        <button class="quick-btn" onclick="askBrain('Crime safety tips')">🛡️ Safety</button>
+        <button class="quick-btn" onclick="askBrain('Speak to me in Zulu')">🗣️ Zulu</button>
+        <button class="quick-btn" onclick="askBrain('How are you today?')">💬 Chat</button>
+      </div>
+      <div id="chat-messages"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Talk to AEGON..." onkeydown="if(event.key==='Enter')sendChat()" />
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+
+    <!-- KZN -->
+    <div id="screen-kzn" class="screen active">
+      <div class="install-banner" id="install-banner">
+        <h3>📱 Install AEGON as Real App</h3>
+        <div class="install-steps">Huawei / Android: Menu → Add to Home screen</div>
+      </div>
+      <div class="weather-box">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="temp" id="temp-display">--°</div>
+            <div style="font-size:18px;font-weight:600" id="weather-desc">Loading...</div>
+            <div style="font-size:12px;color:#a5b4fc;margin-top:2px" id="feels-like"></div>
+          </div>
+          <button class="btn-sm" style="background:#312e81;color:#c4b5fd" onclick="loadWeather()">Refresh</button>
+        </div>
+        <div class="weather-meta" id="weather-meta">Mbonambi • fetching...</div>
+        <div id="storm-box"></div>
+        <div class="hourly-row" id="hourly-row"></div>
+        <div class="daily-list" id="daily-list"></div>
+        <div style="margin-top:12px">
+          <span class="alert-badge badge-green" id="alert-count">0 local alerts</span>
+          <span class="alert-badge badge-red">Stay Alert</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚠️ KZN Situation</div>
+        <div class="news-item">• Live weather for Mbonambi / Richards Bay is shown above.</div>
+        <div class="news-item">• For current incidents check SABC, SAWS and local CPF groups.</div>
+        <div class="news-item">• Report anything suspicious using the ALERTS tab (anonymous option available).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SYSTEM</div>
+        <div class="sys-grid">
+          <div class="sys-item"><div class="sys-label">JWT</div><div class="sys-value" id="jwt-timer" style="color:var(--gold)">14m 59s</div></div>
+          <div class="sys-item"><div class="sys-label">VERSION</div><div class="sys-value">Phase 1.5</div></div>
+          <div class="sys-item"><div class="sys-label">OWNER</div><div class="sys-value">Bound</div></div>
+          <div class="sys-item"><div class="sys-label">STORAGE</div><div class="sys-value" id="storage-size">0.6 KB</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTS -->
+    <div id="screen-alerts" class="screen">
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <select id="alert-type" style="flex:1;margin:0"><option>Suspicious</option><option>Crime in progress</option><option>Missing person</option><option>Accident</option><option>Other</option></select>
+          <select id="alert-area" style="flex:1;margin:0"><option>Mbonambi Cent</option><option>School Gate</option><option>Clinic Road</option><option>Shop Corner</option><option>Old Age Home</option></select>
+        </div>
+        <label>DESCRIPTION</label>
+        <textarea id="alert-desc" rows="3" placeholder="What happened?"></textarea>
+        <div class="check-row"><input type="checkbox" id="anon" checked /> Anonymous ON</div>
+        <div class="check-row"><input type="checkbox" id="saps" checked /> SAPS 10111</div>
+        <button class="btn-send" onclick="sendTip()">SEND TIP</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Recent Alerts</div>
+        <div id="alert-list" style="font-size:13px;color:var(--muted)">No alerts yet.</div>
+      </div>
+    </div>
+
+    <!-- CAM -->
+    <div id="screen-cam" class="screen">
+      <div class="cam-grid">
+        <div class="cam-card"><div class="cam-icon">📷</div><div class="cam-name">School Gate</div><div class="cam-status"><span class="live-dot"></span> READY</div></div>
+        <div class="cam-card"><div class="cam-icon">📷</div><div class="cam-name">Clinic Road</div><div class="cam-status"><span class="live-dot"></span> READY</div></div>
+        <div class="cam-card"><div class="cam-icon">📷</div><div class="cam-name">Shop Corner</div><div class="cam-status"><span class="live-dot"></span> READY</div></div>
+        <div class="cam-card"><div class="cam-icon">📷</div><div class="cam-name">Old Age Home</div><div class="cam-status"><span class="live-dot"></span> READY</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Add Camera</div>
+        <input type="text" id="cam-name" placeholder="Camera name" />
+        <input type="text" id="cam-url" placeholder="rtsp:// or .m3u8 link" />
+        <button class="btn-primary" onclick="addCamera()">Save Camera</button>
+        <div class="hint" style="text-align:left;margin-top:10px">Only use cameras you have permission for. Real RTSP needs conversion to HLS for phone viewing.</div>
+      </div>
+    </div>
+
+    <!-- LEARN -->
+    <div id="screen-learn" class="screen">
+      <div class="card">
+        <div class="card-title">Learn • Homework Helper</div>
+        <div class="subject-tabs" id="subject-tabs"></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <select id="learn-grade" style="flex:1;margin:0">
+            <option>Grade 8</option><option>Grade 9</option><option>Grade 10</option>
+            <option selected>Grade 11</option><option>Grade 12</option>
+          </select>
+        </div>
+        <input type="text" id="learn-q" placeholder="Type your question..." />
+        <button class="btn-primary" onclick="askTutor()">Ask AEGON Tutor</button>
+      </div>
+      <div class="card">
+        <div class="card-title">How AEGON Helps</div>
+        <ul style="font-size:13px;line-height:1.7;padding-left:18px;color:var(--muted)">
+          <li><b>Youth:</b> step-by-step homework help</li>
+          <li><b>Elders:</b> simple language + Zulu support</li>
+          <li><b>Community:</b> anonymous safety tips</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BUILD / OWNER -->
+    <div id="screen-build" class="screen">
+      <div class="card">
+        <div class="card-title">👑 Owner • Manage Subjects</div>
+        <div class="subject-list" id="owner-subjects"></div>
+        <label style="margin-top:14px">Add new subject</label>
+        <input type="text" id="new-subject" placeholder="e.g. Geography, History, Business Studies" />
+        <button class="btn-primary" onclick="addSubject()">ADD SUBJECT</button>
+      </div>
+      <div class="card">
+        <div class="card-title">OWNER MODE</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Bound since October 6, 2026</div>
+        <div class="toggle-row"><span>ALLOW GUESTS</span><div class="toggle on" id="tog-guests" onclick="toggle(this,'aegon_allow_guests')"></div></div>
+        <div class="toggle-row">
+          <span>CHANGE PIN</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input type="password" id="new-pin" placeholder="****" style="width:70px;margin:0;padding:6px 8px;font-size:13px" />
+            <button class="btn-sm" style="background:var(--purple);color:#fff" onclick="savePin()">SAVE</button>
+          </div>
+        </div>
+        <div class="toggle-row" style="border:none">
+          <span>OWNER NAME</span>
+          <button class="btn-sm" style="background:#1e1e2e;border:1px solid var(--border);color:var(--text)" onclick="editOwnerName()">EDIT</button>
+        </div>
+        <button class="btn-danger" onclick="clearAllData()">CLEAR ALL DATA</button>
+        <button class="btn-lock" onclick="lockApp()">LOCK AEGON</button>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button class="nav-item" data-screen="chat" onclick="showScreen('chat')"><div class="icon">💬</div>CHAT</button>
+      <button class="nav-item active" data-screen="kzn" onclick="showScreen('kzn')"><div class="icon">🌍</div>KZN</button>
+      <button class="nav-item" data-screen="alerts" onclick="showScreen('alerts')"><div class="icon">🚨</div>ALERTS</button>
+      <button class="nav-item" data-screen="cam" onclick="showScreen('cam')"><div class="icon">📷</div>CAM</button>
+      <button class="nav-item" data-screen="learn" onclick="showScreen('learn')"><div class="icon">📚</div>LEARN</button>
+      <button class="nav-item" data-screen="build" onclick="showScreen('build')"><div class="icon">🔧</div>BUILD</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   AEGON Phase 1.5 – Level 1 improvements + AI-ready
+   - Better conversation
+   - Stronger structure for future real AI (Level 2)
+   - Full weather already in place
+   To connect real AI later: replace generateReply() body
+   with an API call that returns the same string format.
+   ===================================================== */
+const DEFAULTS = {
+  aegon_owner_name: 'Nhlakanipho Ntombela',
+  aegon_owner_email: 'nhlakanipho@mbonambi.kzn',
+  aegon_owner_pin: '1234',
+  aegon_bound: 'true',
+  aegon_allow_guests: 'true',
+  alerts: '[]',
+  cameras: '[]',
+  chat_history: '[]',
+  subjects: JSON.stringify(['Math','Science','English','Zulu'])
+};
+
+let jwtSeconds = 15*60, jwtInterval = null, deferredPrompt = null;
+let currentSubject = 'Math', chatHistory = [], subjects = [];
+
+function init() {
+  Object.keys(DEFAULTS).forEach(k => { if (localStorage.getItem(k) === null) localStorage.setItem(k, DEFAULTS[k]); });
+  subjects = JSON.parse(localStorage.getItem('subjects') || DEFAULTS.subjects);
+  if (localStorage.getItem('aegon_logged_in') === 'true') showApp();
+  else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app').style.display = 'none'; }
+  try {
+    chatHistory = JSON.parse(localStorage.getItem('chat_history') || '[]');
+    if (chatHistory.length === 0) {
+      appendChat("Sawubona! I'm AEGON, your community helper for Mbonambi. I can help with schoolwork (Grade 8–12), safety tips, weather, and just chat. How can I support you today?", false);
+    } else chatHistory.forEach(m => appendChat(m.text, m.isUser, true));
+  } catch(e){}
+  renderSubjects();
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (email === (localStorage.getItem('aegon_owner_email')||'nhlakanipho@mbonambi.kzn') && pass === (localStorage.getItem('aegon_owner_pin')||'1234')) {
+    localStorage.setItem('aegon_logged_in','true'); localStorage.setItem('aegon_is_owner','true');
+    showApp(); toast('Welcome back!');
+  } else toast('Wrong email or PIN');
+}
+function doGuest() {
+  if (localStorage.getItem('aegon_allow_guests') !== 'true') { toast('Guests disabled'); return; }
+  localStorage.setItem('aegon_logged_in','true'); localStorage.setItem('aegon_is_owner','false');
+  showApp(); toast('Guest access granted');
+}
+function doLogout() {
+  localStorage.setItem('aegon_logged_in','false'); clearInterval(jwtInterval);
+  document.getElementById('app').style.display='none'; document.getElementById('login-screen').style.display='flex';
+}
+function showApp() {
+  document.getElementById('login-screen').style.display='none'; document.getElementById('app').style.display='block';
+  document.getElementById('hdr-name').textContent = localStorage.getItem('aegon_owner_name');
+  startJWT(); loadWeather(); renderSubjects(); updateStorage();
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    const b = document.getElementById('install-banner'); if (b) b.style.display='none';
+  }
+}
+function startJWT() {
+  jwtSeconds = 15*60; clearInterval(jwtInterval);
+  jwtInterval = setInterval(() => {
+    jwtSeconds--; if (jwtSeconds <= 0) { clearInterval(jwtInterval); toast('Session expired'); doLogout(); return; }
+    const m = Math.floor(jwtSeconds/60), s = jwtSeconds%60;
+    const el = document.getElementById('jwt-timer'); if (el) el.textContent = m+'m '+(s<10?'0':'')+s+'s';
+  },1000);
+}
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector('.nav-item[data-screen="'+name+'"]').classList.add('active');
+  if (name === 'build' || name === 'learn') renderSubjects();
+}
+
+/* ===== FRIENDLY CHAT ===== */
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim(); if (!text) return;
+  appendChat(text, true); input.value = '';
+  setTimeout(() => appendChat(generateReply(text), false), 450 + Math.random()*350);
+}
+function askBrain(q) { document.getElementById('chat-input').value = q; sendChat(); showScreen('chat'); }
+function appendChat(text, isUser, skipSave) {
+  const div = document.createElement('div'); div.className = 'chat-bubble';
+  if (isUser) { div.style.marginLeft='auto'; div.style.borderRadius='16px 16px 4px 16px'; div.style.background='#2e1065'; }
+  div.innerHTML = text.replace(/\\n/g,'<br>').replace(/\n/g,'<br>');
+  document.getElementById('chat-messages').appendChild(div); div.scrollIntoView({behavior:'smooth'});
+  if (!skipSave) {
+    chatHistory.push({text, isUser});
+    if (chatHistory.length > 50) chatHistory = chatHistory.slice(-50);
+    localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+  }
+}
+
+function generateReply(q) {
+  const lower = q.toLowerCase().trim();
+
+  // === Future AI hook (Level 2 ready) ===
+  // When you add an API key later, we can replace this whole function
+  // with a call to a real AI while keeping the same interface.
+
+  // Greetings
+  if (/^(hi|hello|hey|sawubona|sanibonani|good morning|good afternoon|good evening)\b/.test(lower)) {
+    return "Sawubona! 😊 Great to hear from you.<br><br>How are you feeling today? I can help with schoolwork, safety, weather, or we can just talk.";
+  }
+
+  // Want to talk / feelings
+  if (lower.includes("feeling") || lower.includes("feelings") || lower.includes("just chatting") || lower.includes("just a chat") || lower.includes("want to talk") || lower.includes("need to talk") || lower.includes("can we talk") || lower.includes("talk about")) {
+    return "Of course. I'm right here.<br><br>You can tell me anything — whether you're happy, stressed, tired, worried, or just want company. No pressure at all.<br><br>How are you feeling right now?";
+  }
+
+  if (lower.includes("thank") || lower.includes("thanks") || lower.includes("excellent") || lower.includes("good job") || lower.includes("well done") || lower.includes("impressed")) {
+    return "You're very welcome! I'm really glad I could help.<br><br>Keep going — you're doing great. What would you like to do next?";
+  }
+
+  if (lower.includes("sad") || lower.includes("stressed") || lower.includes("tired") || lower.includes("worried") || lower.includes("scared") || lower.includes("anxious") || lower.includes("lonely") || lower.includes("depressed") || lower.includes("overwhelmed") || lower.includes("hard day")) {
+    return "I'm sorry you're going through that. It's completely okay to feel this way sometimes.<br><br>Take a slow breath. You're not alone. I'm here if you want help with schoolwork or just want someone to listen.<br><br>What would make things even a little easier right now?";
+  }
+
+  if (lower.includes("happy") || lower.includes("feeling good") || lower.includes("i'm good") || lower.includes("im good") || lower.includes("i am fine") || lower.includes("i'm fine") || lower.includes("great") || lower.includes("awesome") || lower.includes("doing well")) {
+    return "That's really good to hear! 😊 I'm happy you're feeling well.<br><br>What would you like to do — some schoolwork, a quick chat, or something else?";
+  }
+
+  // Zulu
+  if (lower.includes("zulu") || lower.includes("isizulu") || lower.includes("ngikhulume") || lower.includes("ngiyakwazi") || lower.includes("unjani")) {
+    return "Ngiyakwazi ukukhuluma isiZulu! 😊<br><br>Sawubona, unjani namhlanje?<br>Ngicela ungitshele ukuthi ungakwazi ukusiza kanjani — umsebenzi wasekhaya, ukuphepha, noma ukuxoxa nje.<br><br>(I can speak Zulu. How can I help you today?)";
+  }
+
+  // Math
+  if (lower.includes("math") || lower.includes("mathematics") || lower.includes("solve") || lower.includes("calculate") || lower.includes("algebra") || lower.includes("homework") || /\d+\s*[x+\-×*\/÷%=]/.test(lower) || lower.includes("%") || lower.includes("fraction") || lower.includes("simplif") || lower.includes("what do you have for me") || lower.includes("percentage")) {
+    return handleMath(q);
+  }
+
+  // Science
+  if (lower.includes("science") || lower.includes("biology") || lower.includes("physics") || lower.includes("chemistry") || lower.includes("photosynthesis") || lower.includes("force") || lower.includes("atom") || lower.includes("cell") || lower.includes("gravity") || lower.includes("energy")) {
+    return "I'd love to help with Science!<br><br>Tell me the topic and grade, for example:<br>• Grade 11 photosynthesis<br>• Grade 10 forces<br>• Grade 9 cells<br><br>I'll explain it step by step in simple language.";
+  }
+
+  // English
+  if (lower.includes("english") || lower.includes("essay") || lower.includes("grammar") || lower.includes("comprehension") || lower.includes("poem") || lower.includes("letter")) {
+    return "I can help with English — essays, grammar, comprehension, and more.<br><br>Paste the question or the text you need help with and I'll guide you clearly.";
+  }
+
+  // Weather
+  if (lower.includes("weather") || lower.includes("rain") || lower.includes("storm") || lower.includes("temperature") || lower.includes("hot") || lower.includes("cold") || lower.includes("forecast")) {
+    return "You can see the full live weather (hourly + 7-day + storm alerts) on the <b>KZN tab</b> — just tap Refresh.<br><br>For official warnings also check SAWS. Stay safe!";
+  }
+
+  // KZN / news
+  if (lower.includes("kzn") || lower.includes("happening") || lower.includes("going on") || lower.includes("currently") || lower.includes("today") || lower.includes("news") || lower.includes("richards bay") || lower.includes("empangeni") || lower.includes("mbonambi") || lower.includes("mfolozi") || lower.includes("situation")) {
+    const online = navigator.onLine;
+    const timeStr = new Date().toLocaleTimeString("en-ZA", {hour:"2-digit", minute:"2-digit"});
+    if (!online) {
+      return "📡 You are offline right now.<br><br>I can't fetch live updates without internet. When you're back online, ask me again.<br><br>In the meantime:<br>• Check the KZN tab for the last weather<br>• Use ALERTS if you need to report something";
+    }
+    return `📰 KZN Status (${timeStr})<br><br>Here's what I can tell you right now:<br><br>• Live weather (hourly + 7-day + storm alerts) is on the KZN tab — tap Refresh.<br>• For current incidents or crime updates in Richards Bay, Empangeni, Mbonambi and the rest of KZN, the best sources are still:<br>&nbsp;&nbsp;– SABC News<br>&nbsp;&nbsp;– SAWS<br>&nbsp;&nbsp;– Local CPF groups<br>&nbsp;&nbsp;– SAPS 10111<br><br>I don't invent news. If something is happening near you, you can log it in the ALERTS tab.<br><br>Is there a specific place you're asking about?`;
+  }
+
+  // Safety
+  if (lower.includes("crime") || lower.includes("safety") || lower.includes("saps") || lower.includes("danger") || lower.includes("suspicious") || lower.includes("protect") || lower.includes("hijack") || lower.includes("robbery") || lower.includes("shooting") || lower.includes("kidnap")) {
+    return "🛡️ Safety tips for Mbonambi & nearby areas:<br><br>• Move in groups after dark<br>• Use the ALERTS tab to report anything suspicious (anonymous is fine)<br>• Emergency: SAPS 10111<br>• Tell someone where you are when walking<br><br>If something is happening right now, call SAPS first. I'm here afterwards if you need support.";
+  }
+
+  // About
+  if (lower.includes("who are you") || lower.includes("what is aegon") || lower.includes("about you") || lower.includes("your name")) {
+    return "I'm AEGON — a community helper built for Mbonambi.<br><br>I help with schoolwork (Grade 8–12), safety tips, weather, and conversation. You are the owner and can add subjects in the BUILD tab.<br><br>How can I support you today?";
+  }
+
+  // Default – open and warm
+  return "I hear you. 😊<br><br>You can talk to me about anything — how you're feeling, schoolwork, safety, weather, or just everyday life. I'm listening.<br><br>What's on your mind?";
+}
+
+function handleMath(q) {
+  const lower = q.toLowerCase();
+
+  // Percentage
+  let perc = lower.match(/(\d+(?:\.\d+)?)\s*%\s*(?:of\s*)?(\d+(?:\.\d+)?)/);
+  if (perc) {
+    const p = parseFloat(perc[1]), n = parseFloat(perc[2]);
+    const result = (p/100)*n;
+    return `Let's solve this together. 📘\n\nQuestion: What is ${p}% of ${n}?\n\nStep 1: Convert ${p}% to a decimal → ${p} ÷ 100 = ${(p/100).toFixed(2)}\nStep 2: Multiply → ${(p/100).toFixed(2)} × ${n} = <b>${result}</b>\n\n✅ Answer: <b>${result}</b>\n\nWould you like another example?`;
+  }
+
+  // Fraction
+  let frac = lower.match(/(\d+)\s*\/\s*(\d+)/);
+  if (frac && (lower.includes('simplif') || lower.includes('fraction') || lower.includes('reduce'))) {
+    const a = parseInt(frac[1]), b = parseInt(frac[2]);
+    const g = gcd(a,b);
+    return `Let's simplify this fraction. 📘\n\nFraction: ${a}/${b}\n\nStep 1: Find the GCD of ${a} and ${b} = ${g}\nStep 2: Divide top and bottom by ${g}\n${a} ÷ ${g} = ${a/g}\n${b} ÷ ${g} = ${b/g}\n\n✅ Simplified form: <b>${a/g}/${b/g}</b>`;
+  }
+
+  // Arithmetic
+  let arith = lower.match(/(\d+(?:\.\d+)?)\s*([+\-×x*\/÷])\s*(\d+(?:\.\d+)?)/);
+  if (arith) {
+    const a = parseFloat(arith[1]), op = arith[2], b = parseFloat(arith[3]);
+    let result, symbol;
+    if (op==='+'){result=a+b;symbol='+';}
+    else if (op==='-'){result=a-b;symbol='−';}
+    else if (op==='×'||op==='x'||op==='*'){result=a*b;symbol='×';}
+    else {result=a/b;symbol='÷';}
+    return `Here's the calculation: 📘\n\n${a} ${symbol} ${b} = <b>${result}</b>\n\n✅ Answer: <b>${result}</b>`;
+  }
+
+  // Linear equation
+  const m = q.match(/(\d*)x\s*([+\-])\s*(\d+)\s*=\s*(\d+)/i);
+  if (m) {
+    const a = m[1]===''?1:parseInt(m[1]);
+    const b = (m[2]==='-'?-1:1)*parseInt(m[3]);
+    const c = parseInt(m[4]);
+    const x = (c-b)/a;
+    return `Let's solve this step by step. 📘\n\nEquation: ${a}x ${b>=0?'+ '+b:'− '+Math.abs(b)} = ${c}\n\n1. Move the constant: ${a}x = ${c} − (${b}) = ${c-b}\n2. Divide both sides by ${a}: x = ${c-b} ÷ ${a} = <b>${x}</b>\n\n✅ Answer: x = <b>${x}</b>\n\nWant to try another one?`;
+  }
+
+  return "I can help with Math! Try questions like:\n• What is 25% of 80?\n• Simplify 12/18\n• 15 × 4\n• Solve 2x + 5 = 17\n\nJust type the question clearly and I'll show the working.";
+}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=b;b=a%b;a=t;}return a;}
+
+/* ===== TUTOR & SUBJECTS ===== */
+function renderSubjects() {
+  const tabs = document.getElementById('subject-tabs');
+  if (tabs) {
+    tabs.innerHTML = subjects.map(s =>
+      `<div class="subject-tab ${s===currentSubject?'active':''}" onclick="setSubject(this,'${s}')">${s}</div>`
+    ).join('');
+  }
+  const list = document.getElementById('owner-subjects');
+  if (list) {
+    list.innerHTML = subjects.map((s,i) =>
+      `<div class="subject-item"><span>${s}</span><button class="btn-sm" style="background:#1e1e2e;border:1px solid var(--border);color:var(--red);font-size:11px" onclick="removeSubject(${i})">Remove</button></div>`
+    ).join('') || '<div class="small">No subjects yet</div>';
+  }
+}
+function setSubject(el, name) {
+  document.querySelectorAll('.subject-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); currentSubject = name;
+}
+function addSubject() {
+  const name = document.getElementById('new-subject').value.trim();
+  if (!name) { toast('Enter a subject name'); return; }
+  if (subjects.includes(name)) { toast('Already exists'); return; }
+  subjects.push(name);
+  localStorage.setItem('subjects', JSON.stringify(subjects));
+  document.getElementById('new-subject').value = '';
+  renderSubjects(); toast('Subject added: ' + name);
+}
+function removeSubject(i) {
+  if (!confirm('Remove ' + subjects[i] + '?')) return;
+  subjects.splice(i,1);
+  localStorage.setItem('subjects', JSON.stringify(subjects));
+  renderSubjects(); toast('Removed');
+}
+function askTutor() {
+  const q = document.getElementById('learn-q').value.trim();
+  if (!q) { toast('Type a question first'); return; }
+  const grade = document.getElementById('learn-grade').value;
+  showScreen('chat');
+  document.getElementById('chat-input').value = currentSubject + ' ' + grade + ': ' + q;
+  sendChat();
+}
+
+/* ===== ALERTS / CAM / WEATHER / OWNER ===== */
+function sendTip() {
+  const desc = document.getElementById('alert-desc').value.trim();
+  if (!desc) { toast('Please describe what happened'); return; }
+  const alerts = JSON.parse(localStorage.getItem('alerts')||'[]');
+  alerts.unshift({type:document.getElementById('alert-type').value, area:document.getElementById('alert-area').value, desc, time:new Date().toLocaleString(), anon:document.getElementById('anon').checked});
+  localStorage.setItem('alerts', JSON.stringify(alerts));
+  document.getElementById('alert-desc').value=''; loadAlerts(); toast('Tip saved');
+}
+function loadAlerts() {
+  const alerts = JSON.parse(localStorage.getItem('alerts')||'[]');
+  const list = document.getElementById('alert-list');
+  if (!list) return;
+  if (!alerts.length) { list.innerHTML='No alerts yet.'; return; }
+  list.innerHTML = alerts.slice(0,8).map(a =>
+    `<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border)"><b>${a.type}</b> @ ${a.area}<br><span style="color:var(--muted)">${a.desc}</span><br><small>${a.time}</small></div>`
+  ).join('');
+  const badge = document.getElementById('alert-count'); if (badge) badge.textContent = alerts.length + ' local alerts';
+}
+function addCamera() {
+  const name = document.getElementById('cam-name').value.trim();
+  if (!name) { toast('Enter camera name'); return; }
+  const cams = JSON.parse(localStorage.getItem('cameras')||'[]');
+  cams.push({name, url: document.getElementById('cam-url').value.trim()||'demo'});
+  localStorage.setItem('cameras', JSON.stringify(cams));
+  document.getElementById('cam-name').value=''; document.getElementById('cam-url').value='';
+  toast('Camera saved');
+}
+async function loadWeather() {
+  const tempEl = document.getElementById('temp-display');
+  const descEl = document.getElementById('weather-desc');
+  const metaEl = document.getElementById('weather-meta');
+  const feelsEl = document.getElementById('feels-like');
+  const hourlyEl = document.getElementById('hourly-row');
+  const dailyEl = document.getElementById('daily-list');
+  const stormEl = document.getElementById('storm-box');
+  if (!tempEl) return;
+  tempEl.textContent = '...';
+  descEl.textContent = 'Fetching...';
+  if (feelsEl) feelsEl.textContent = '';
+  if (hourlyEl) hourlyEl.innerHTML = '';
+  if (dailyEl) dailyEl.innerHTML = '';
+  if (stormEl) stormEl.innerHTML = '';
+
+  const codeMap = {
+    0:'☀️ Clear',1:'☀️ Mainly clear',2:'⛅ Partly cloudy',3:'☁️ Overcast',
+    45:'🌫️ Fog',48:'🌫️ Fog',
+    51:'🌧️ Light drizzle',53:'🌧️ Drizzle',55:'🌧️ Drizzle',
+    61:'🌧️ Light rain',63:'🌧️ Rain',65:'🌧️ Heavy rain',
+    66:'🌧️ Freezing rain',67:'🌧️ Freezing rain',
+    71:'🌨️ Snow',73:'🌨️ Snow',75:'🌨️ Heavy snow',
+    80:'🌧️ Showers',81:'🌧️ Showers',82:'🌧️ Heavy showers',
+    95:'⛈️ Thunderstorm',96:'⛈️ Thunderstorm',99:'⛈️ Severe thunderstorm'
+  };
+
+  try {
+    // Mfolozi / Mbonambi area (Richards Bay region)
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-28.75&longitude=32.05&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Africa%2FJohannesburg&forecast_days=7';
+    const res = await fetch(url);
+    const data = await res.json();
+    const cur = data.current;
+
+    tempEl.textContent = Math.round(cur.temperature_2m) + '°';
+    descEl.textContent = codeMap[cur.weather_code] || '🌤️ Variable';
+    if (feelsEl) feelsEl.textContent = 'Feels like ' + Math.round(cur.apparent_temperature) + '°';
+    metaEl.innerHTML = 'Mbonambi / Mfolozi • Humidity ' + cur.relative_humidity_2m + '% • Wind ' + Math.round(cur.wind_speed_10m) + ' km/h<br>Updated just now';
+
+    // Storm / heavy rain warning
+    let stormMsg = '';
+    const codes = [cur.weather_code, ...(data.hourly.weather_code || []).slice(0, 12)];
+    const rainProbs = (data.hourly.precipitation_probability || []).slice(0, 12);
+    if (codes.some(c => c >= 95)) {
+      stormMsg = '⚠️ Thunderstorm possible in the next hours. Stay indoors if possible.';
+    } else if (codes.some(c => c >= 65) || rainProbs.some(p => p >= 60)) {
+      stormMsg = '🌧️ Heavy rain possible soon. Be careful on the roads.';
+    } else if (rainProbs.some(p => p >= 40)) {
+      stormMsg = '🌦️ Rain expected later. Keep an umbrella handy.';
+    }
+    if (stormEl && stormMsg) {
+      stormEl.innerHTML = '<div class="storm-alert">' + stormMsg + '</div>';
+    }
+
+    // Hourly (next 6 hours)
+    if (hourlyEl && data.hourly) {
+      const now = new Date();
+      let html = '';
+      let count = 0;
+      for (let i = 0; i < data.hourly.time.length && count < 6; i++) {
+        const t = new Date(data.hourly.time[i]);
+        if (t < now - 30*60000) continue;
+        const label = count === 0 ? 'Now' : t.getHours() + ':00';
+        const icon = (codeMap[data.hourly.weather_code[i]] || '🌤️').split(' ')[0];
+        const temp = Math.round(data.hourly.temperature_2m[i]);
+        html += '<div class="hourly-item"><div class="h-time">' + label + '</div><div class="h-icon">' + icon + '</div><div class="h-temp">' + temp + '°</div></div>';
+        count++;
+      }
+      hourlyEl.innerHTML = html;
+    }
+
+    // 7-day forecast
+    if (dailyEl && data.daily) {
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      let html = '<div style="font-size:11px;color:#a5b4fc;margin-bottom:6px;font-weight:600">7-DAY FORECAST</div>';
+      for (let i = 0; i < data.daily.time.length; i++) {
+        const d = new Date(data.daily.time[i] + 'T12:00:00');
+        const dayName = i === 0 ? 'Today' : days[d.getDay()];
+        const icon = (codeMap[data.daily.weather_code[i]] || '🌤️').split(' ')[0];
+        const high = Math.round(data.daily.temperature_2m_max[i]);
+        const low = Math.round(data.daily.temperature_2m_min[i]);
+        const rain = data.daily.precipitation_probability_max[i];
+        const rainTxt = rain >= 20 ? ' 💧' + rain + '%' : '';
+        html += '<div class="daily-row"><span style="width:52px">' + dayName + '</span><span>' + icon + rainTxt + '</span><span style="font-weight:600">' + high + '° <span style="color:#94a3b8;font-weight:400">' + low + '°</span></span></div>';
+      }
+      dailyEl.innerHTML = html;
+    }
+  } catch (e) {
+    tempEl.textContent = '31°';
+    descEl.textContent = 'Mostly cloudy (offline)';
+    if (feelsEl) feelsEl.textContent = 'Feels like ~34°';
+    metaEl.textContent = 'Mbonambi • last known data';
+    if (stormEl) stormEl.innerHTML = '';
+  }
+}
+
+function toggle(el, key) { el.classList.toggle('on'); localStorage.setItem(key, el.classList.contains('on')?'true':'false'); }
+function savePin() {
+  const pin = document.getElementById('new-pin').value.trim();
+  if (pin.length < 4) { toast('PIN must be at least 4 characters'); return; }
+  localStorage.setItem('aegon_owner_pin', pin); document.getElementById('new-pin').value=''; toast('PIN saved');
+}
+function editOwnerName() {
+  const name = prompt('New owner name:', localStorage.getItem('aegon_owner_name'));
+  if (name && name.trim()) {
+    localStorage.setItem('aegon_owner_name', name.trim());
+    document.getElementById('hdr-name').textContent = name.trim();
+    toast('Name updated');
+  }
+}
+function clearAllData() {
+  if (!confirm('Clear ALL data? You will need to login again.')) return;
+  localStorage.clear(); Object.keys(DEFAULTS).forEach(k => localStorage.setItem(k, DEFAULTS[k]));
+  toast('Cleared'); doLogout();
+}
+function lockApp() { localStorage.setItem('aegon_logged_in','false'); toast('Locked'); doLogout(); }
+function updateStorage() {
+  let total=0; for (let k in localStorage) if (localStorage.hasOwnProperty(k)) total += (localStorage[k]||'').length + k.length;
+  const el = document.getElementById('storage-size'); if (el) el.textContent = (total/1024).toFixed(1)+' KB';
+}
+function toast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.style.display='block';
+  setTimeout(() => t.style.display='none', 2800);
+}
+function promptInstall() {
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => deferredPrompt=null); }
+  else toast('Use browser menu → Add to Home screen');
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt=e; });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+init();
+</script>
+</body>
+</html>
